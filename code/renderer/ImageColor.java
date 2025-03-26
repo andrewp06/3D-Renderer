@@ -9,4 +9,5 @@ public class ImageColor {
     int r;
     int g;
     int b;
+    
 }
