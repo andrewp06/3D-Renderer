@@ -47,10 +47,11 @@ public class Image implements Closeable {
         Image image = screen.image;
         for(int i = 1; i<image.width;i++){
             for(int j = 1; j<image.height;j++){
-                Vector point = Calculate.createRayPoint(i, j, screen);
+                Vector point = Calculate.createRay(i, j, screen).origin;
                 int red = Math.round(((point.x+1)/2)*255);
                 int green = Math.round(((point.y+.75f)/2)*255);
                 image.plotPixel(i, j, new ImageColor(red, green, 100));
+                
             }
         }
     }

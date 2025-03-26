@@ -2,7 +2,7 @@ package code.renderer;
 
 public class Calculate {
 
-    public static Vector createRayPoint(int xPixel, int yPixel, Screen screen){
+    private static Vector createRayPoint(int xPixel, int yPixel, Screen screen){
         Image image  = screen.image;
         ImagePlane imagePlane = screen.imagePlane;
         float alpha = (float) xPixel / image.width;
@@ -23,5 +23,11 @@ public class Calculate {
             );
 
         return p;
+    }
+
+    public static Ray createRay(int xPixel, int yPixel, Screen screen){
+        Vector p = createRayPoint(xPixel, yPixel, screen);
+        Vector c = screen.getCamera();
+        return new Ray(Vector.vectorSubtration(p, c),p);
     }
 }

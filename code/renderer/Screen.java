@@ -13,12 +13,12 @@ public class Screen {
     public Screen(){
         image = new Image(256,192);
         imagePlane = new ImagePlane();
-        camera = getCamera();
+        camera = new Vector(0, 0, -1);
         shapes = new ArrayList<>();
     }
 
-    public static Vector getCamera(){
-        return new Vector(0, 0, -1);
+    public Vector getCamera() {
+        return camera;
     }
 
     public void addShape(Shape shape){
