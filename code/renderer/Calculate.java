@@ -1,7 +1,6 @@
 package code.renderer;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Calculate {
@@ -34,6 +33,7 @@ public class Calculate {
         Vector c = screen.getCamera();
         return new Ray(Vector.vectorSubtration(p, c),p);
     }
+
 
     public static float intersectionSphere(Sphere sphere, Ray ray){
         float quadA = (float)Math.pow(Vector.magnitude(ray.direction), 2);
@@ -70,7 +70,17 @@ public class Calculate {
                 tValues.add(intersectionSphere(sphere, ray));
             }
         }
-        float smallest = Collections.min(tValues);
+        float smallest=0;
+        for(float tValue: tValues){
+            if (smallest==0&&tValue>0){
+                smallest = tValue;
+            }else if (tValue>0&&tValue<smallest){
+                smallest = tValue;
+            }
+        }
+        if (smallest==0){
+            return new ImageColor(0, 0, 0);
+        }
         Shape closestShape = shapes.get(tValues.indexOf(smallest));
 
         return closestShape.getColor();

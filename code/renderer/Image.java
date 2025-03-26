@@ -8,7 +8,8 @@ import java.io.File;
 import java.io.IOException;
 
 
-public class Image implements Closeable {
+
+public class Image implements Closeable{
     private final BufferedImage image;
     private final Graphics2D graphics;
     int width;
@@ -55,9 +56,21 @@ public class Image implements Closeable {
         }
     }
 
+    public static void shapeTest(Screen screen){
+        Image image = screen.image;
+        for(int i = 1; i<image.width;i++){
+            for(int j = 1; j<image.height;j++){
+                Ray ray = Calculate.createRay(i, j, screen);
+                ImageColor color = Calculate.shapeInFront(screen.shapes, ray);
+                image.plotPixel(i, j, color);
+            }
+        }
+    }
+
     public static void main(String[] args) throws IOException{
         Screen screen = new Screen();
         firstTest(screen);
         screen.image.save("code/renderer/test.png");
     }
+    
 }

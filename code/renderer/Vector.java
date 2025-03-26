@@ -27,6 +27,10 @@ public class Vector {
         return (a.x*b.x)+(a.y*b.y)+(a.z*b.z);
     }
 
+    public static float magnitude(Vector a){
+        return (float)Math.sqrt(Math.pow(a.x,2)+Math.pow(a.y,2)+Math.pow(a.z,2));
+    }
+
 
     @Override
     public String toString() {

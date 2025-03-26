@@ -8,10 +8,4 @@ public class Ray {
         this.direction = direction;
         this.origin = origin;
     }
-
-    public static Ray makeRay(Vector p, Vector c){
-        Vector direction = Vector.vectorSubtration(p, c);
-        Vector origin = c;
-        return new Ray(direction, origin);
-    }
 }

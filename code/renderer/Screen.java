@@ -1,5 +1,6 @@
 package code.renderer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,11 +30,13 @@ public class Screen {
         return shapes;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException{
         Screen screen = new Screen();
-        screen.addShape(new Sphere(.25f,new Vector(0, 0, 1)));
-        screen.addShape(new Sphere(.5f,new Vector(0, .5f, 2)));
+        screen.addShape(new Sphere(.25f,new Vector(-.5f, 0, 1),new ImageColor(0, 255, 0)));
+        screen.addShape(new Sphere(1f,new Vector(1f, -.5f, 1),new ImageColor(255, 0, 255)));
+        screen.addShape(new Sphere(3f,new Vector(0, .5f, 6)));
 
-        System.out.println(screen.getShapes().toString());
+        Image.shapeTest(screen);
+        screen.image.save("code/renderer/sphereTest.png");
     }
 }
