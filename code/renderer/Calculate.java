@@ -30,4 +30,31 @@ public class Calculate {
         Vector c = screen.getCamera();
         return new Ray(Vector.vectorSubtration(p, c),p);
     }
+
+    public static float intersectionSphere(Sphere sphere, Ray ray){
+        float quadA = (float)Math.pow(Vector.magnitude(ray.direction), 2);
+        Vector cPrime = Vector.vectorSubtration(ray.origin, sphere.center);
+        float quadB = 2*Vector.dotProduct(cPrime, ray.direction);
+        float quadC = (float)Math.pow(Vector.magnitude(cPrime), 2)-(float)Math.pow(sphere.radius, 2);
+        float discriminant = (float)Math.pow(quadB,2)-(4*quadA*quadC);
+        if (discriminant<0){
+            return 0;
+        }
+        float t1 = ((-1*quadB)-(float)Math.sqrt(discriminant))/(2*quadA);
+        float t2 = ((-1*quadB)+(float)Math.sqrt(discriminant))/(2*quadA);
+
+        if (t1>0&&t2>0){
+            if (t1>t2){
+                return t2;
+            }
+            return t1;
+        }
+        if (t1>0){
+            return t1;
+        }
+        if (t2>0){
+            return t2;
+        }
+        return 0;
+    }
 }
