@@ -9,7 +9,7 @@ public class Screen {
     Vector camera;
 
     public Screen(){
-        image = new Image();
+        image = new Image(256,192);
         imagePlane = new ImagePlane();
         camera = getCamera();
     }
