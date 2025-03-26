@@ -1,5 +1,9 @@
 package code.renderer;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class Calculate {
 
     private static Vector createRayPoint(int xPixel, int yPixel, Screen screen){
@@ -56,5 +60,19 @@ public class Calculate {
             return t2;
         }
         return 0;
+    }
+
+    public static ImageColor shapeInFront(List<Shape> shapes, Ray ray){
+        List<Float> tValues = new ArrayList<>();
+        for(Shape shape:shapes){
+            if(shape instanceof Sphere){
+                Sphere sphere = (Sphere)shape;
+                tValues.add(intersectionSphere(sphere, ray));
+            }
+        }
+        float smallest = Collections.min(tValues);
+        Shape closestShape = shapes.get(tValues.indexOf(smallest));
+
+        return closestShape.getColor();
     }
 }

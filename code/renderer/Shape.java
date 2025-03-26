@@ -1,3 +1,5 @@
 package code.renderer;
 
-public interface Shape {}
+public interface Shape {
+    public ImageColor getColor();
+}

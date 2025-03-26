@@ -18,4 +18,8 @@ public class Sphere implements Shape{
     public String toString() {
         return "|R="+radius+", Center="+center+", Color="+color+"|";
     }
+    @Override
+    public ImageColor getColor() {
+        return color;
+    }
 }
