@@ -15,8 +15,12 @@ public class Vector {
         return new Vector(vector.x*scalar, vector.y*scalar, vector.z*scalar);
     }
 
-    public Vector vectorAddition(Vector a, Vector b){
+    public static Vector vectorAddition(Vector a, Vector b){
         return new Vector(a.x+b.x, a.y+b.y, a.z+b.z);
+    }
+
+    public static Vector vectorSubtration(Vector a, Vector b){
+        return new Vector(a.x-b.x, a.y-b.y, a.z-b.z);
     }
 
 
