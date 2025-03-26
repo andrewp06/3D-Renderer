@@ -1,25 +1,39 @@
 package code.renderer;
 
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class Screen {
     
     Image image;
     ImagePlane imagePlane;
     Vector camera;
+    List<Shape> shapes;
 
     public Screen(){
         image = new Image(256,192);
         imagePlane = new ImagePlane();
         camera = getCamera();
+        shapes = new ArrayList<>();
     }
 
     public static Vector getCamera(){
         return new Vector(0, 0, -1);
     }
 
+    public void addShape(Shape shape){
+        shapes.add(shape);
+    }
+
+    public List<Shape> getShapes() {
+        return shapes;
+    }
+
     public static void main(String[] args) {
-        ImagePlane plane = new ImagePlane();
-        System.out.println(plane.toString());
+        Screen screen = new Screen();
+        screen.addShape(new Sphere(.25f,new Vector(0, 0, 1)));
+        screen.addShape(new Sphere(.5f,new Vector(0, .5f, 2)));
+
+        System.out.println(screen.getShapes().toString());
     }
 }
