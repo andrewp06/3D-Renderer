@@ -51,7 +51,6 @@ public class Image implements Closeable {
                 int red = Math.round(((point.x+1)/2)*255);
                 int green = Math.round(((point.y+.75f)/2)*255);
                 image.plotPixel(i, j, new ImageColor(red, green, 100));
-                
             }
         }
     }

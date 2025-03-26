@@ -23,6 +23,10 @@ public class Vector {
         return new Vector(a.x-b.x, a.y-b.y, a.z-b.z);
     }
 
+    public static float dotProduct(Vector a, Vector b){
+        return (a.x*b.x)+(a.y*b.y)+(a.z*b.z);
+    }
+
 
     @Override
     public String toString() {
