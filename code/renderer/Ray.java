@@ -2,16 +2,16 @@ package code.renderer;
 
 public class Ray {
     Vector direction;
-    Point origin;
+    Vector origin;
 
-    public Ray(Vector direction, Point origin){
+    public Ray(Vector direction, Vector origin){
         this.direction = direction;
         this.origin = origin;
     }
 
     public static Ray makeRay(Vector p, Vector c){
         Vector direction = Vector.vectorSubtration(p, c);
-        Point origin = new Point(p);
+        Vector origin = c;
         return new Ray(direction, origin);
     }
 }
