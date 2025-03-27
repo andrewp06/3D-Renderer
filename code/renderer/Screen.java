@@ -71,17 +71,17 @@ public class Screen {
 
     public static void main(String[] args) throws IOException{
         Screen screen = new Screen();
-        screen.addSphere(new Sphere(1f,new Vector(1f, -.5f, 2),new Color(0, 1, 0)));
-        screen.addSphere(new Sphere(1f,new Vector(0, 0, 3),new Color(1,0,0 )));
-        screen.addSphere(new Sphere(1f,new Vector(-4, .5f, 6), new Color(0, 0, 1)));
+        screen.addSphere(new Sphere(1f,new Vector(1f, -.5f, 2),new Color(0, .75f, 0)));
+        screen.addSphere(new Sphere(1f,new Vector(0, 0, 3),new Color(.75f,0,0 )));
+        screen.addSphere(new Sphere(1f,new Vector(-4, .5f, 6), new Color(0, 0, .75f)));
         
-        Light fillLight = new Light(new Vector(-3, 2, -3), new Color(0.4f, 0.4f, 0.4f),new Color(0.4f, 0.4f, 0.4f));
+        Light fillLight = new Light(new Vector(-3, 2, -3), new Color(.4f),new Color(.4f));
         screen.lights.add(fillLight);
 
-        Light keyLight = new Light(new Vector(10, 7, -3), new Color(0.6f, 0.6f, 0.6f),new Color(0.6f, 0.6f, 0.6f));
+        Light keyLight = new Light(new Vector(10, 7, 5), new Color(.7f),new Color(.7f));
         screen.lights.add(keyLight);
 
-        screen.ambientLight = new Color(0.1f, 0.1f, 0.1f);
+        screen.ambientLight = new Color(.3f);
 
         screen.shapeTest();
         screen.image.save("code/renderer/sphereTest3.png");
