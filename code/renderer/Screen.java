@@ -9,15 +9,15 @@ public class Screen {
     Image image;
     ImagePlane imagePlane;
     Vector camera;
-    List<Shape> shapes;
+    List<Sphere> spheres;
     List<Light> lights;
     Color ambientLight;
 
     public Screen(){
-        image = new Image(256,192);
+        image = new Image(1440,1080);
         imagePlane = new ImagePlane();
         camera = new Vector(0, 0, -1);
-        shapes = new ArrayList<>();
+        spheres = new ArrayList<>();
         lights = new ArrayList<>();
     }
 
@@ -25,12 +25,12 @@ public class Screen {
         return camera;
     }
 
-    public void addShape(Shape shape){
-        shapes.add(shape);
+    public void addSphere(Sphere sphere){
+        spheres.add(sphere);
     }
 
-    public List<Shape> getShapes() {
-        return shapes;
+    public List<Sphere> getShperes() {
+        return spheres;
     }
 
     public void setAmbientLight(Color ambientLight) {
@@ -63,7 +63,7 @@ public class Screen {
         for(int i = 1; i<image.width;i++){
             for(int j = 1; j<image.height;j++){
                 Ray ray = Calculate.createRay(i, j, this);
-                ImageColor color = Calculate.shapeInFront(shapes, ray);
+                ImageColor color = Calculate.shapeInFront(spheres, ray,this);
                 image.plotPixel(i, j, color);
             }
         }
@@ -71,15 +71,19 @@ public class Screen {
 
     public static void main(String[] args) throws IOException{
         Screen screen = new Screen();
-        screen.addShape(new Sphere(.25f,new Vector(-.5f, 0, 1),new Color(0, 1, 0)));
-        screen.addShape(new Sphere(1f,new Vector(1f, -.5f, 1),new Color(1, 1, 1)));
-        screen.addShape(new Sphere(3f,new Vector(0, .5f, 6)));
+        screen.addSphere(new Sphere(1f,new Vector(1f, -.5f, 2),new Color(0, 1, 0)));
+        screen.addSphere(new Sphere(1f,new Vector(0, 0, 3),new Color(1,0,0 )));
+        screen.addSphere(new Sphere(1f,new Vector(-4, .5f, 6), new Color(0, 0, 1)));
         
-        screen.addLight(new Light(new Vector(0, 2, 0),new Color(.6f, .6f, .6f),new Color(.25f, .25f, .25f)));
-        screen.addLight(new Light(new Vector(-2, 0, 0),new Color(.6f, .6f, .6f),new Color(.25f, .25f, .25f)));
-        screen.setAmbientLight(new Color(.6f, 0, .6f));
-        
+        Light fillLight = new Light(new Vector(-3, 2, -3), new Color(0.4f, 0.4f, 0.4f),new Color(0.4f, 0.4f, 0.4f));
+        screen.lights.add(fillLight);
+
+        Light keyLight = new Light(new Vector(10, 7, -3), new Color(0.6f, 0.6f, 0.6f),new Color(0.6f, 0.6f, 0.6f));
+        screen.lights.add(keyLight);
+
+        screen.ambientLight = new Color(0.1f, 0.1f, 0.1f);
+
         screen.shapeTest();
-        screen.image.save("code/renderer/sphereTest.png");
+        screen.image.save("code/renderer/sphereTest3.png");
     }
 }

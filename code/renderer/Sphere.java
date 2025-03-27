@@ -1,6 +1,6 @@
 package code.renderer;
 
-public class Sphere implements Shape{
+public class Sphere{
     float radius;
     Vector center;
     Color color;
@@ -24,11 +24,11 @@ public class Sphere implements Shape{
     public String toString() {
         return "|R="+radius+", Center="+center+", Color="+color+"|";
     }
-    @Override
+
     public Color getColor() {
         return color;
     }
-    @Override
+
     public Material getMaterial() {
         return material;
     }

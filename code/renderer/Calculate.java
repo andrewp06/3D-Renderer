@@ -109,13 +109,10 @@ public class Calculate {
      * 
      * @returns color to set the pixel to based on the provided information
      */
-    public static ImageColor shapeInFront(List<Shape> shapes, Ray ray){
+    public static ImageColor shapeInFront(List<Sphere> spheres, Ray ray, Screen screen){
         List<Float> tValues = new ArrayList<>();
-        for(Shape shape:shapes){
-            if(shape instanceof Sphere){
-                Sphere sphere = (Sphere)shape;
-                tValues.add(intersectionSphere(sphere, ray));
-            }
+        for(Sphere sphere:spheres){ 
+            tValues.add(intersectionSphere(sphere, ray));
         }
         float smallest=0;
         for(float tValue: tValues){
@@ -128,17 +125,71 @@ public class Calculate {
         if (smallest==0){
             return new ImageColor(0, 0, 0);
         }
-        Shape closestShape = shapes.get(tValues.indexOf(smallest));
+        Sphere closestShape = spheres.get(tValues.indexOf(smallest));
+        Color initialColor = closestShape.getColor();
 
-        return colorToImageColor(closestShape.getColor());
+        VectorPair vectors = surfaceNormal(smallest, ray, closestShape);
+        Vector unitNormal = vectors.unitNormal;
+        Vector pointOfIntersection = vectors.pointOfIntersection;
+        Color ambientTerm = calculateAmbientTerm(closestShape, screen);
+        Color diffuseTerm = calculateDiffuseTerm(closestShape, screen, unitNormal, pointOfIntersection);
+        Color finalColor = clamp(addColors(addColors(ambientTerm, diffuseTerm), initialColor));
+
+        return colorToImageColor(finalColor);
     }
 
-    private static Vector surfaceNormal(float t, Ray ray, Sphere sphere){
+
+    private static VectorPair surfaceNormal(float t, Ray ray, Sphere sphere){
         Vector pointOfIntersection = Vector.vectorAddition(ray.origin, Vector.scalarMult(ray.direction, t));
         Vector normalVector = Vector.vectorSubtration(pointOfIntersection, sphere.center);
         Vector unitNormal = Vector.scalarMult(normalVector, 1/Vector.magnitude(normalVector));
-        return unitNormal;
+        return new VectorPair(unitNormal, pointOfIntersection);
     }
+
+    private static Color calculateAmbientTerm(Sphere sphere, Screen screen){
+        return new Color(
+                sphere.material.ambiantConstant.getR()*screen.ambientLight.getR(),
+                sphere.material.ambiantConstant.getG()*screen.ambientLight.getG(),
+                sphere.material.ambiantConstant.getB()*screen.ambientLight.getB()
+                );
+    }
+
+    private static Color  calculateDiffuseTerm(Sphere sphere, Screen screen, Vector unitNormal, Vector pointOfIntersection){
+        Color totalDiffuseAndSpecularComponent = new Color(0, 0, 0);
+        for(Light light : screen.lights){
+            Vector lightVector = Vector.vectorSubtration(light.location, pointOfIntersection);
+            Vector untiLightVector = Vector.scalarMult(lightVector, 1/Vector.magnitude(lightVector));
+            float dotProduct = Vector.dotProduct(unitNormal, untiLightVector);
+            if(dotProduct>=0){
+                Color diffuseComponent = new Color(
+                    light.diffuseIntensity.getR()*sphere.material.diffuseConstant*dotProduct,
+                    light.diffuseIntensity.getG()*sphere.material.diffuseConstant*dotProduct,
+                    light.diffuseIntensity.getB()*sphere.material.diffuseConstant*dotProduct
+                );
+                totalDiffuseAndSpecularComponent = addColors(diffuseComponent, totalDiffuseAndSpecularComponent);
+                Color specularComponent = calculateSpecularTerm(sphere, screen, unitNormal, pointOfIntersection, untiLightVector, light);
+                totalDiffuseAndSpecularComponent = addColors(addColors(specularComponent, totalDiffuseAndSpecularComponent),specularComponent);
+            }
+        }
+        return totalDiffuseAndSpecularComponent;
+    }
+
+    private static Color calculateSpecularTerm(Sphere sphere, Screen screen, Vector unitNormal, Vector pointOfIntersection, Vector lightVector, Light light){
+        Vector reflectance = Vector.vectorSubtration(Vector.scalarMult(Vector.scalarMult(unitNormal,Vector.dotProduct(unitNormal, lightVector)), 2),lightVector);
+        reflectance = Vector.scalarMult(reflectance, 1 / Vector.magnitude(reflectance));
+        Vector viewVector = Vector.vectorSubtration(screen.camera, pointOfIntersection);
+        viewVector = Vector.scalarMult(viewVector, 1 / Vector.magnitude(viewVector));
+
+        float dotProduct = Math.max(Vector.dotProduct(reflectance, viewVector), 0);
+        float specularColorScalar = (float)Math.pow(dotProduct,sphere.material.shininess)*sphere.material.specularConstant;
+        return new Color(
+                    light.specularIntensity.getR()*specularColorScalar,
+                    light.specularIntensity.getG()*specularColorScalar,
+                    light.specularIntensity.getB()*specularColorScalar
+                );
+
+    }
+
 
     public static ImageColor colorToImageColor(Color color){
         return new ImageColor(
@@ -147,4 +198,17 @@ public class Calculate {
                     Math.round(color.getB()*255)
         );
     }
+    private static Color addColors(Color c1, Color c2){
+        return new Color(c1.getR()+c2.getR(), c1.getG()+c2.getG(), c1.getB()+c2.getB());
+    }
+
+    private static Color clamp(Color c) {
+        return new Color(
+            Math.max(0, Math.min(c.getR(), 1)),
+            Math.max(0, Math.min(c.getG(), 1)),
+            Math.max(0, Math.min(c.getB(), 1))
+        );
+    }
+    
+    
 }
