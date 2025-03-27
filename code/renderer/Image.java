@@ -34,43 +34,18 @@ public class Image implements Closeable{
         graphics.fillRect(x, y, 1, 1);
     }
 
+    /*
+     * @params filename filename of the file that the image will be stored at
+     * 
+     * stores a copy of the image to a PNG file at the given location 
+     */
     public void save(String filename) throws IOException {
-        boolean success = ImageIO.write(image, "PNG", new File(filename));
-        System.out.println(success);
+        ImageIO.write(image, "PNG", new File(filename));
     }
 
     @Override
     public void close() throws IOException {
         graphics.dispose();
-    }
-
-    public static void firstTest(Screen screen){
-        Image image = screen.image;
-        for(int i = 1; i<image.width;i++){
-            for(int j = 1; j<image.height;j++){
-                Vector point = Calculate.createRay(i, j, screen).origin;
-                int red = Math.round(((point.x+1)/2)*255);
-                int green = Math.round(((point.y+.75f)/2)*255);
-                image.plotPixel(i, j, new ImageColor(red, green, 100));
-            }
-        }
-    }
-
-    public static void shapeTest(Screen screen){
-        Image image = screen.image;
-        for(int i = 1; i<image.width;i++){
-            for(int j = 1; j<image.height;j++){
-                Ray ray = Calculate.createRay(i, j, screen);
-                ImageColor color = Calculate.shapeInFront(screen.shapes, ray);
-                image.plotPixel(i, j, color);
-            }
-        }
-    }
-
-    public static void main(String[] args) throws IOException{
-        Screen screen = new Screen();
-        firstTest(screen);
-        screen.image.save("code/renderer/test.png");
     }
     
 }
