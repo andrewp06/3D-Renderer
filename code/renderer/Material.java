@@ -1,12 +1,12 @@
 package code.renderer;
 
 public class Material {
-    ImageColor ambiantConstant;
+    Color ambiantConstant;
     float diffuseConstant;
     float specularConstant;
     float shininess;
 
-    public Material(ImageColor ambiantConstant, float diffuseConstant, float specularConstant, float shininess){
+    public Material(Color ambiantConstant, float diffuseConstant, float specularConstant, float shininess){
         this.ambiantConstant = ambiantConstant;
         this.diffuseConstant = diffuseConstant;
         this.specularConstant = specularConstant;
@@ -14,6 +14,6 @@ public class Material {
     }
 
     public Material(){
-        this(new ImageColor(50, 50, 50), .5f,.25f, shininess = .25f);
+        this(new Color(.25f, .25f, .25f), .5f,.25f, shininess = .25f);
     }
 }
