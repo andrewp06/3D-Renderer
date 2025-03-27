@@ -10,12 +10,15 @@ public class Screen {
     ImagePlane imagePlane;
     Vector camera;
     List<Shape> shapes;
+    List<Light> lights;
+    ImageColor ambientLight;
 
     public Screen(){
         image = new Image(256,192);
         imagePlane = new ImagePlane();
         camera = new Vector(0, 0, -1);
         shapes = new ArrayList<>();
+        lights = new ArrayList<>();
     }
 
     public Vector getCamera() {
@@ -28,6 +31,14 @@ public class Screen {
 
     public List<Shape> getShapes() {
         return shapes;
+    }
+
+    public void setAmbientLight(ImageColor ambientLight) {
+        this.ambientLight = ambientLight;
+    }
+
+    public void addLight(Light light){
+        lights.add(light);
     }
 
     /*
@@ -63,7 +74,11 @@ public class Screen {
         screen.addShape(new Sphere(.25f,new Vector(-.5f, 0, 1),new ImageColor(0, 255, 0)));
         screen.addShape(new Sphere(1f,new Vector(1f, -.5f, 1),new ImageColor(255, 255, 255)));
         screen.addShape(new Sphere(3f,new Vector(0, .5f, 6)));
-
+        
+        screen.addLight(new Light(new Vector(0, 2, 0),new ImageColor(150, 150, 150),new ImageColor(255, 255, 255)));
+        screen.addLight(new Light(new Vector(-2, 0, 0),new ImageColor(150, 150, 150),new ImageColor(255, 255, 255)));
+        screen.setAmbientLight(new ImageColor(150, 0, 150));
+        
         screen.shapeTest();
         screen.image.save("code/renderer/sphereTest.png");
     }

@@ -4,14 +4,20 @@ public class Sphere implements Shape{
     float radius;
     Vector center;
     ImageColor color;
+    Material material;
 
-    public Sphere(float radius, Vector center, ImageColor color){
+    public Sphere(float radius, Vector center, ImageColor color, Material material){
         this.radius = radius;
         this.center = center;
         this.color = color;
+        this.material = material;
     }
+    public Sphere(float radius, Vector center, ImageColor color){
+        this(radius,center,color,new Material());
+    }
+
     public Sphere(float radius, Vector center){
-        this(radius,center,new ImageColor(255,0,0));
+        this(radius,center,new ImageColor(255,0,0),new Material());
     }
 
     @Override
@@ -21,5 +27,9 @@ public class Sphere implements Shape{
     @Override
     public ImageColor getColor() {
         return color;
+    }
+    @Override
+    public Material getMaterial() {
+        return material;
     }
 }
