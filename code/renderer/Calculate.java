@@ -17,7 +17,7 @@ public class Calculate {
      * 
      * @return the vector at the pixel
      */
-    private static Vector createRayPoint(int xPixel, int yPixel, Screen screen){
+    private static Vector createRayPoint(float xPixel, float yPixel, Screen screen){
         Image image  = screen.image;
         ImagePlane imagePlane = screen.imagePlane;
         float alpha = (float) xPixel / image.width;
@@ -44,6 +44,36 @@ public class Calculate {
         return p;
     }
 
+    public static Ray createRayPoint3SubDivisions(int xPixel, int yPixel, Screen screen, int subX, int subY){
+
+        Image image  = screen.image;
+        ImagePlane imagePlane = screen.imagePlane;
+        float deltaAlpha = 1/(3*image.width);
+        float deltaBeta = 1/(3*image.height);
+        float alpha = ((float) xPixel + (subX+.5f)*deltaAlpha )/ image.width;
+        float beta = ((float) yPixel + (subY+.5f)*deltaBeta)/ image.height;
+
+        //linear interpolation of the pixel across the top 2 verticies
+        Vector t = Vector.vectorAddition(
+            Vector.scalarMult(imagePlane.topLeft, (1-alpha)), 
+            Vector.scalarMult(imagePlane.topRight, alpha)
+        );
+
+        //linear interpolation of the pixel across the bottom 2 verticies
+        Vector b = Vector.vectorAddition(
+            Vector.scalarMult(imagePlane.bottomLeft, (1-alpha)), 
+            Vector.scalarMult(imagePlane.bottomRight, alpha)
+        );
+
+        //bilinear interpolation of the pixel across vector b and t to make the vector p at the pixel
+        Vector p = Vector.vectorAddition(
+            Vector.scalarMult(t, (1-beta)), 
+            Vector.scalarMult(b, beta)
+        );
+
+        return new Ray(Vector.vectorSubtration(p, screen.getCamera()),p);
+    }
+
     /*
      * @params xPixel an integer representing the x possiiton of the pixel being examined
      * @params yPixel an integer representing the y possiiton of the pixel being examined
@@ -54,7 +84,7 @@ public class Calculate {
      * 
      * @return the computed ray
      */
-    public static Ray createRay(int xPixel, int yPixel, Screen screen){
+    public static Ray createRay(float xPixel, float yPixel, Screen screen){
         Vector p = createRayPoint(xPixel, yPixel, screen);
         Vector c = screen.getCamera();
         return new Ray(Vector.vectorSubtration(p, c),p);
@@ -99,17 +129,22 @@ public class Calculate {
         return 0;
     }
 
-    /*
-     * @params List<Shape> shapes a list of shapes that could be in view
-     * @params ray a ray of a pixel relative to the camera
+    /**
+     * @param ray a ray of a pixel relative to the camera
+     * @param screen the screen that holds all of the infromation we need
+     * @param recursionDepth the amount of times this funcitonn wil be recursivly called
      * 
      * iterates through all the possible shapes and determins which is closest ot the camera that intersects with the ray.
      * if there is no intersection the return the color black
-     * if there is intersection then return the color of the closest object
+     * if there is intersection then return the color of the closest object.
      * 
-     * @returns color to set the pixel to based on the provided information
+     * Recursivle calls the function a nunmber a times specified in the parameter to create the reflections of other objects
+     * 
+     * @return color to set the pixel to based on the provided information
      */
     public static Color shapeInFront( Ray ray, Screen screen, int recursionDepth){
+
+        //finds the closest shape and gets its color value
         List<Float> tValues = new ArrayList<>();
         List<Sphere> spheres = screen.spheres;
         for(Sphere sphere:spheres){ 
@@ -129,6 +164,7 @@ public class Calculate {
         Sphere closestShape = spheres.get(tValues.indexOf(smallest));
         Color initialColor = closestShape.getColor();
 
+        //applies color values from the lights to the initial values
         VectorPair vectors = surfaceNormal(smallest, ray, closestShape);
         Vector unitNormal = vectors.unitNormal;
         Vector pointOfIntersection = vectors.pointOfIntersection;
@@ -136,17 +172,20 @@ public class Calculate {
         Color diffuseTerm = calculateDiffuseTerm(closestShape, screen, unitNormal, pointOfIntersection);
         Color finalColor = addColors(addColors(ambientTerm, diffuseTerm), initialColor);
 
+        //create new rays from the point of intersection to the next closest object
         Vector vVector = ray.direction;
-        vVector = Vector.scalarMult(vVector, 1 / Vector.magnitude(vVector));
-        if (Vector.dotProduct(vVector, unitNormal) > 0) {
-            unitNormal = Vector.scalarMult(unitNormal, -1); // Flip the normal
-        }        
-        Vector reflectance = Vector.vectorSubtration(vVector,Vector.scalarMult(Vector.scalarMult(unitNormal,Vector.dotProduct(unitNormal, vVector)), 2));
-        // reflectance = Vector.scalarMult(reflectance, 1 / Vector.magnitude(reflectance));
+        vVector = Vector.scalarMult(vVector, -1 / Vector.magnitude(vVector));
+        Vector reflectance;
+        if (Vector.dotProduct(vVector, unitNormal) < 0) {
+            reflectance = new Vector(0,0,0);
+        } else{
+            reflectance = Vector.vectorSubtration(Vector.scalarMult(Vector.scalarMult(unitNormal,Vector.dotProduct(unitNormal, vVector)), 2),vVector);
+            reflectance = Vector.scalarMult(reflectance, 1 / Vector.magnitude(reflectance));
+        }
         Color reflect = closestShape.material.reflectivity;
-
+        //recersivly call this function with a new ray to find color of reflection
         if(recursionDepth>0){
-            Color postReflection = shapeInFront(new Ray(pointOfIntersection, reflectance), screen, recursionDepth-1);
+            Color postReflection = shapeInFront(new Ray(reflectance,pointOfIntersection), screen, recursionDepth-1);
             postReflection = multColors(reflect, postReflection);
             finalColor = addColors(finalColor, postReflection);
         }
@@ -155,6 +194,15 @@ public class Calculate {
     }
 
 
+    /**
+     * @param t a float for the distance the object is along the ray
+     * @param ray a ray from the pixel to the camera
+     * @param sphere a sphere the ray is intersecting at distance t
+     * 
+     * uses vector addition, subtration, and normalization to find the point of intersection and the unit normal vector at that point
+     * 
+     * @return a pair of vectors being the unit normal vector and the p[oint of intersection
+     */
     private static VectorPair surfaceNormal(float t, Ray ray, Sphere sphere){
         Vector pointOfIntersection = Vector.vectorAddition(ray.origin, Vector.scalarMult(ray.direction, t));
         Vector normalVector = Vector.vectorSubtration(pointOfIntersection, sphere.center);
@@ -162,6 +210,14 @@ public class Calculate {
         return new VectorPair(unitNormal, pointOfIntersection);
     }
 
+    /**
+     * @param sphere the shpere that the pixel sees
+     * @param screen the screen holding all of the information needed
+     * 
+     * use the ambient constant on the shpere materal and multiply it by the ambient light of the screen
+     * 
+     * @return the color product of the 2 values
+     */
     private static Color calculateAmbientTerm(Sphere sphere, Screen screen){
         return new Color(
                 sphere.material.ambiantConstant.getR()*screen.ambientLight.getR(),
@@ -170,9 +226,22 @@ public class Calculate {
                 );
     }
 
+    /**
+     * @param sphere the sphere that the pixel sees
+     * @param screen the screen that contains all the information baoput the scene
+     * @param unitNormal a normal vector on the shpere at the point of intersection
+     * @param pointOfIntersection a vector to the point that the pixel's ray intersects with the shpere
+     * 
+     * iterates through all of the lights in the scene
+     * if the light is able to see the object (not in a shadow) then it calculates the diffuse term and the specular term for the light
+     * 
+     * @return the color value of the specular and diffuse copmonents of the lights on the object
+     */
     private static Color  calculateDiffuseTerm(Sphere sphere, Screen screen, Vector unitNormal, Vector pointOfIntersection){
         Color totalDiffuseAndSpecularComponent = new Color(0);
         for(Light light : screen.lights){
+
+            //checking if the light contacts the shpere at the point
             boolean inShadow = false;
             Ray shadowRay = shadowRay(light.location, pointOfIntersection);
             for (Sphere otherShpere:screen.spheres){
@@ -185,7 +254,10 @@ public class Calculate {
 
                 }
             }
+
+
             if(!inShadow){
+                //calculates the diffuse component
                 Vector lightVector = Vector.vectorSubtration(light.location, pointOfIntersection);
                 Vector untiLightVector = Vector.scalarMult(lightVector, 1/Vector.magnitude(lightVector));
                 float dotProduct = Vector.dotProduct(unitNormal, untiLightVector);
@@ -195,21 +267,39 @@ public class Calculate {
                         light.diffuseIntensity.getG()*sphere.material.diffuseConstant*dotProduct,
                         light.diffuseIntensity.getB()*sphere.material.diffuseConstant*dotProduct
                     );
+                    
+                    //combines the diffuse and specular components
                     totalDiffuseAndSpecularComponent = addColors(diffuseComponent, totalDiffuseAndSpecularComponent);
                     Color specularComponent = calculateSpecularTerm(sphere, screen, unitNormal, pointOfIntersection, untiLightVector, light);
                     totalDiffuseAndSpecularComponent = addColors(addColors(specularComponent, totalDiffuseAndSpecularComponent),specularComponent);
                 }
             }
         }
+
         return totalDiffuseAndSpecularComponent;
     }
 
+    /**
+     * @param sphere the shpere that the pixel sees
+     * @param screen the screen that holds all of the informaion about the scene
+     * @param unitNormal the unit normal vector at the poiunt of intersection
+     * @param pointOfIntersection vector to the point where the piuxel sees the sphere
+     * @param lightVector unit vector of the direction from the point of intersection to the light
+     * @param light a light that is beign examined
+     * 
+     * calculate the specular term for the light on the shpere at the  point of intersection
+     * 
+     * @return the specular term
+     */
     private static Color calculateSpecularTerm(Sphere sphere, Screen screen, Vector unitNormal, Vector pointOfIntersection, Vector lightVector, Light light){
+
+        //create vectors for calculation
         Vector reflectance = Vector.vectorSubtration(Vector.scalarMult(Vector.scalarMult(unitNormal,Vector.dotProduct(unitNormal, lightVector)), 2),lightVector);
         reflectance = Vector.scalarMult(reflectance, 1 / Vector.magnitude(reflectance));
         Vector viewVector = Vector.vectorSubtration(screen.camera, pointOfIntersection);
         viewVector = Vector.scalarMult(viewVector, 1 / Vector.magnitude(viewVector));
 
+        //calculate values for specular constant
         float dotProduct = Math.max(Vector.dotProduct(reflectance, viewVector), 0);
         float specularColorScalar = (float)Math.pow(dotProduct,sphere.material.shininess)*sphere.material.specularConstant;
         return new Color(
@@ -221,6 +311,13 @@ public class Calculate {
     }
 
 
+    /**
+     * @param color a representation of color with float values
+     * 
+     * convert from color to colorImage
+     * 
+     * @return a representation of color with values [0,255]
+     */
     public static ImageColor colorToImageColor(Color color){
         return new ImageColor(
                     Math.round(color.getR()*255),
@@ -228,13 +325,38 @@ public class Calculate {
                     Math.round(color.getB()*255)
         );
     }
-    private static Color addColors(Color c1, Color c2){
+
+    /**
+     * @param c1 color
+     * @param c2 color
+     * 
+     * add the rgb values of the colors together
+     * 
+     * @return combined color
+     */
+    public static Color addColors(Color c1, Color c2){
         return new Color(c1.getR()+c2.getR(), c1.getG()+c2.getG(), c1.getB()+c2.getB());
     }
+
+    /**
+     * @param c1 color
+     * @param c2 color
+     * 
+     * multiply the values of rgb
+     * 
+     * @return product color
+     */
     private static Color multColors(Color c1, Color c2){
         return new Color(c1.getR()*c2.getR(), c1.getG()*c2.getG(), c1.getB()*c2.getB());
     }
 
+    /**
+     * @param c color to be clamped
+     * 
+     * ensures that the values for rgb in the colors fall in the range [0,1]
+     * 
+     * @return adjusted color
+     */
     private static Color clamp(Color c) {
         return new Color(
             Math.max(0, Math.min(c.getR(), 1)),
@@ -243,8 +365,17 @@ public class Calculate {
         );
     }
 
+    /**
+     * @param light light vector
+     * @param pointOfIntersection point of intersection
+     * 
+     * create shadow ray from light and point of intersection
+     * 
+     * @return new shadow ray
+     */
     public static Ray shadowRay(Vector light, Vector pointOfIntersection){
-        return new Ray(Vector.vectorSubtration(light, pointOfIntersection),pointOfIntersection);
+        Vector bias = Vector.scalarMult(pointOfIntersection, 1e-4f); 
+        return new Ray(Vector.vectorSubtration(light, Vector.vectorAddition(bias, pointOfIntersection)),pointOfIntersection);
     }
     
     

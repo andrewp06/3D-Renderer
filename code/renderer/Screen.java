@@ -62,16 +62,28 @@ public class Screen {
     public void shapeTest(){
         for(int i = 1; i<image.width;i++){
             for(int j = 1; j<image.height;j++){
-                Ray ray = Calculate.createRay(i, j, this);
-                ImageColor color = Calculate.colorToImageColor(Calculate.shapeInFront(ray,this, 1));
+                ImageColor color = Calculate.colorToImageColor(SSAA(i,j));
                 image.plotPixel(i, j, color);
             }
         }
     }
 
+    private Color SSAA(int xPixel,int yPixel){
+        Color finalColor = new Color(0, 0, 0);
+        for (int i = 0; i<3; i++){
+            for (int j = 0; j<3; j++){
+                Ray ray = Calculate.createRayPoint3SubDivisions(xPixel,yPixel,this,i,j);
+                Color sampleColor = Calculate.shapeInFront(ray, this, 0);
+                finalColor = Calculate.addColors(finalColor, sampleColor);
+            }
+        }
+        finalColor = new Color(finalColor.getR()/9,finalColor.getG()/9,finalColor.getB()/9);
+        return finalColor;
+    }
+
     public static void main(String[] args) throws IOException{
         Screen screen = new Screen();
-        screen.addSphere(new Sphere(1f,new Vector(1.25f, -.5f, 2),new Color(.1f, .7f, .1f)));
+        screen.addSphere(new Sphere(1f,new Vector(1.25f, -.5f, 5f),new Color(.1f, .7f, .1f)));
         screen.addSphere(new Sphere(1f,new Vector(0, 0, 3.5f),new Color(.5f,0,0 )));
         screen.addSphere(new Sphere(1f,new Vector(-4, .5f, 6), new Color(0, 0, .75f)));
         
