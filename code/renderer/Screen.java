@@ -63,7 +63,7 @@ public class Screen {
         for(int i = 1; i<image.width;i++){
             for(int j = 1; j<image.height;j++){
                 Ray ray = Calculate.createRay(i, j, this);
-                ImageColor color = Calculate.shapeInFront(spheres, ray,this);
+                ImageColor color = Calculate.colorToImageColor(Calculate.shapeInFront(ray,this, 1));
                 image.plotPixel(i, j, color);
             }
         }
@@ -71,19 +71,24 @@ public class Screen {
 
     public static void main(String[] args) throws IOException{
         Screen screen = new Screen();
-        screen.addSphere(new Sphere(1f,new Vector(1.5f, -.5f, 2),new Color(0, .75f, 0)));
-        screen.addSphere(new Sphere(1f,new Vector(0, 0, 3),new Color(.75f,0,0 )));
+        screen.addSphere(new Sphere(1f,new Vector(1.25f, -.5f, 2),new Color(.1f, .7f, .1f)));
+        screen.addSphere(new Sphere(1f,new Vector(0, 0, 3.5f),new Color(.5f,0,0 )));
         screen.addSphere(new Sphere(1f,new Vector(-4, .5f, 6), new Color(0, 0, .75f)));
         
-        Light fillLight = new Light(new Vector(-3, 2, -3), new Color(.4f),new Color(.4f));
-        screen.lights.add(fillLight);
+        screen.addLight(new Light(
+            new Vector(-5, 1, 0.5f),
+            new Color(0.8f, 0.8f, 0.8f),
+            new Color(0.8f, 0.8f, 0.8f)
+        ));
+        screen.addLight(new Light(
+            new Vector(10, -1, 0.5f),
+            new Color(0.7f, 0.7f, 0.7f),
+            new Color(0.8f, 0.8f, 0.8f)
+        ));
 
-        Light keyLight = new Light(new Vector(10, 7, 3), new Color(.7f),new Color(.7f));
-        screen.lights.add(keyLight);
-
-        screen.ambientLight = new Color(.3f);
+        screen.ambientLight = new Color(.1f);
 
         screen.shapeTest();
-        screen.image.save("code/renderer/sphereTest3.png");
+        screen.image.save("code/renderer/sphereTest4.png");
     }
 }

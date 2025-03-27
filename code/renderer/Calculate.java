@@ -79,7 +79,7 @@ public class Calculate {
 
         //check if the discriminate would be less than zero. if so then the objects arent in view and copmuting the number would bring up errors
         if (discriminant<0){
-            return 0;
+            return -1;
         }
         float t1 = ((-1*quadB)-(float)Math.sqrt(discriminant))/(2*quadA);
         float t2 = ((-1*quadB)+(float)Math.sqrt(discriminant))/(2*quadA);
@@ -109,8 +109,9 @@ public class Calculate {
      * 
      * @returns color to set the pixel to based on the provided information
      */
-    public static ImageColor shapeInFront(List<Sphere> spheres, Ray ray, Screen screen){
+    public static Color shapeInFront( Ray ray, Screen screen, int recursionDepth){
         List<Float> tValues = new ArrayList<>();
+        List<Sphere> spheres = screen.spheres;
         for(Sphere sphere:spheres){ 
             tValues.add(intersectionSphere(sphere, ray));
         }
@@ -123,7 +124,7 @@ public class Calculate {
             }
         }
         if (smallest==0){
-            return new ImageColor(0, 0, 0);
+            return new Color(0);
         }
         Sphere closestShape = spheres.get(tValues.indexOf(smallest));
         Color initialColor = closestShape.getColor();
@@ -133,9 +134,24 @@ public class Calculate {
         Vector pointOfIntersection = vectors.pointOfIntersection;
         Color ambientTerm = calculateAmbientTerm(closestShape, screen);
         Color diffuseTerm = calculateDiffuseTerm(closestShape, screen, unitNormal, pointOfIntersection);
-        Color finalColor = clamp(addColors(addColors(ambientTerm, diffuseTerm), initialColor));
+        Color finalColor = addColors(addColors(ambientTerm, diffuseTerm), initialColor);
 
-        return colorToImageColor(finalColor);
+        Vector vVector = ray.direction;
+        vVector = Vector.scalarMult(vVector, 1 / Vector.magnitude(vVector));
+        if (Vector.dotProduct(vVector, unitNormal) > 0) {
+            unitNormal = Vector.scalarMult(unitNormal, -1); // Flip the normal
+        }        
+        Vector reflectance = Vector.vectorSubtration(vVector,Vector.scalarMult(Vector.scalarMult(unitNormal,Vector.dotProduct(unitNormal, vVector)), 2));
+        // reflectance = Vector.scalarMult(reflectance, 1 / Vector.magnitude(reflectance));
+        Color reflect = closestShape.material.reflectivity;
+
+        if(recursionDepth>0){
+            Color postReflection = shapeInFront(new Ray(pointOfIntersection, reflectance), screen, recursionDepth-1);
+            postReflection = multColors(reflect, postReflection);
+            finalColor = addColors(finalColor, postReflection);
+        }
+
+        return clamp(finalColor);
     }
 
 
@@ -214,6 +230,9 @@ public class Calculate {
     }
     private static Color addColors(Color c1, Color c2){
         return new Color(c1.getR()+c2.getR(), c1.getG()+c2.getG(), c1.getB()+c2.getB());
+    }
+    private static Color multColors(Color c1, Color c2){
+        return new Color(c1.getR()*c2.getR(), c1.getG()*c2.getG(), c1.getB()*c2.getB());
     }
 
     private static Color clamp(Color c) {
