@@ -73,7 +73,7 @@ public class Screen {
         for (int i = 0; i<3; i++){
             for (int j = 0; j<3; j++){
                 Ray ray = Calculate.createRayPoint3SubDivisions(xPixel,yPixel,this,i,j);
-                Color sampleColor = Calculate.shapeInFront(ray, this, 0);
+                Color sampleColor = Calculate.shapeInFront(ray, this, 3);
                 finalColor = Calculate.addColors(finalColor, sampleColor);
             }
         }

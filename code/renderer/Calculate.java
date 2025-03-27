@@ -175,20 +175,24 @@ public class Calculate {
         //create new rays from the point of intersection to the next closest object
         Vector vVector = ray.direction;
         vVector = Vector.scalarMult(vVector, -1 / Vector.magnitude(vVector));
-        Vector reflectance;
-        if (Vector.dotProduct(vVector, unitNormal) < 0) {
-            reflectance = new Vector(0,0,0);
-        } else{
-            reflectance = Vector.vectorSubtration(Vector.scalarMult(Vector.scalarMult(unitNormal,Vector.dotProduct(unitNormal, vVector)), 2),vVector);
-            reflectance = Vector.scalarMult(reflectance, 1 / Vector.magnitude(reflectance));
-        }
+
         Color reflect = closestShape.material.reflectivity;
         //recersivly call this function with a new ray to find color of reflection
-        if(recursionDepth>0){
-            Color postReflection = shapeInFront(new Ray(reflectance,pointOfIntersection), screen, recursionDepth-1);
+        if (recursionDepth > 0) {
+            // Offset point to avoid self-intersection
+            Vector reflectionOrigin = Vector.vectorAddition(pointOfIntersection, Vector.scalarMult(unitNormal, 1e-4f));
+        
+            // Ensure correct reflection calculation
+            Vector reflectance = Vector.scalarMult(unitNormal, 2 * Vector.dotProduct(unitNormal, vVector));
+            reflectance = Vector.vectorSubtration(reflectance, vVector);
+            reflectance = Vector.scalarMult(reflectance, 1 / Vector.magnitude(reflectance));
+        
+            // Recursive reflection
+            Color postReflection = shapeInFront(new Ray(reflectance, reflectionOrigin), screen, recursionDepth - 1);
             postReflection = multColors(reflect, postReflection);
             finalColor = addColors(finalColor, postReflection);
         }
+        
 
         return clamp(finalColor);
     }
