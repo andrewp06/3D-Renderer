@@ -1,6 +1,13 @@
 {
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar",
-        "/Users/andrewrohde/Downloads/lombok-1.18.4.jar"
-    ]
+    "java.project.referencedLibraries": {
+        "include": [
+            "lib/**/*.jar",
+            "/Users/andrewrohde/Downloads/lombok-1.18.4.jar",
+            "/Users/andrewrohde/Downloads/javafx-sdk-24/**/*.jar",
+            "/Users/andrewrohde/javafx-sdk-24/lib/**/*.jar"
+        ],
+        "exclude": [
+            "/Users/andrewrohde/.m2/repository/org/openjfx/javafx-media/22/javafx-media-22-mac-aarch64.jar"
+        ]
+    }
 }

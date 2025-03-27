@@ -16,7 +16,7 @@ public class Screen {
     public Screen(){
         image = new Image(1440,1080);
         imagePlane = new ImagePlane();
-        camera = new Vector(0, 0, -1);
+        camera = new Vector(0, 0, -1.25f);
         spheres = new ArrayList<>();
         lights = new ArrayList<>();
     }
@@ -71,14 +71,14 @@ public class Screen {
 
     public static void main(String[] args) throws IOException{
         Screen screen = new Screen();
-        screen.addSphere(new Sphere(1f,new Vector(1f, -.5f, 2),new Color(0, .75f, 0)));
+        screen.addSphere(new Sphere(1f,new Vector(1.5f, -.5f, 2),new Color(0, .75f, 0)));
         screen.addSphere(new Sphere(1f,new Vector(0, 0, 3),new Color(.75f,0,0 )));
         screen.addSphere(new Sphere(1f,new Vector(-4, .5f, 6), new Color(0, 0, .75f)));
         
         Light fillLight = new Light(new Vector(-3, 2, -3), new Color(.4f),new Color(.4f));
         screen.lights.add(fillLight);
 
-        Light keyLight = new Light(new Vector(10, 7, 5), new Color(.7f),new Color(.7f));
+        Light keyLight = new Light(new Vector(10, 7, 3), new Color(.7f),new Color(.7f));
         screen.lights.add(keyLight);
 
         screen.ambientLight = new Color(.3f);

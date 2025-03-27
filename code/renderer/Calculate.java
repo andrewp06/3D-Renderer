@@ -155,20 +155,34 @@ public class Calculate {
     }
 
     private static Color  calculateDiffuseTerm(Sphere sphere, Screen screen, Vector unitNormal, Vector pointOfIntersection){
-        Color totalDiffuseAndSpecularComponent = new Color(0, 0, 0);
+        Color totalDiffuseAndSpecularComponent = new Color(0);
         for(Light light : screen.lights){
-            Vector lightVector = Vector.vectorSubtration(light.location, pointOfIntersection);
-            Vector untiLightVector = Vector.scalarMult(lightVector, 1/Vector.magnitude(lightVector));
-            float dotProduct = Vector.dotProduct(unitNormal, untiLightVector);
-            if(dotProduct>=0){
-                Color diffuseComponent = new Color(
-                    light.diffuseIntensity.getR()*sphere.material.diffuseConstant*dotProduct,
-                    light.diffuseIntensity.getG()*sphere.material.diffuseConstant*dotProduct,
-                    light.diffuseIntensity.getB()*sphere.material.diffuseConstant*dotProduct
-                );
-                totalDiffuseAndSpecularComponent = addColors(diffuseComponent, totalDiffuseAndSpecularComponent);
-                Color specularComponent = calculateSpecularTerm(sphere, screen, unitNormal, pointOfIntersection, untiLightVector, light);
-                totalDiffuseAndSpecularComponent = addColors(addColors(specularComponent, totalDiffuseAndSpecularComponent),specularComponent);
+            boolean inShadow = false;
+            Ray shadowRay = shadowRay(light.location, pointOfIntersection);
+            for (Sphere otherShpere:screen.spheres){
+                if(sphere!=otherShpere){
+
+                    float tValue = intersectionSphere(otherShpere, shadowRay);
+                    if (tValue>0&&tValue<1){
+                        inShadow = true;
+                    }
+
+                }
+            }
+            if(!inShadow){
+                Vector lightVector = Vector.vectorSubtration(light.location, pointOfIntersection);
+                Vector untiLightVector = Vector.scalarMult(lightVector, 1/Vector.magnitude(lightVector));
+                float dotProduct = Vector.dotProduct(unitNormal, untiLightVector);
+                if(dotProduct>=0){
+                    Color diffuseComponent = new Color(
+                        light.diffuseIntensity.getR()*sphere.material.diffuseConstant*dotProduct,
+                        light.diffuseIntensity.getG()*sphere.material.diffuseConstant*dotProduct,
+                        light.diffuseIntensity.getB()*sphere.material.diffuseConstant*dotProduct
+                    );
+                    totalDiffuseAndSpecularComponent = addColors(diffuseComponent, totalDiffuseAndSpecularComponent);
+                    Color specularComponent = calculateSpecularTerm(sphere, screen, unitNormal, pointOfIntersection, untiLightVector, light);
+                    totalDiffuseAndSpecularComponent = addColors(addColors(specularComponent, totalDiffuseAndSpecularComponent),specularComponent);
+                }
             }
         }
         return totalDiffuseAndSpecularComponent;
@@ -208,6 +222,10 @@ public class Calculate {
             Math.max(0, Math.min(c.getG(), 1)),
             Math.max(0, Math.min(c.getB(), 1))
         );
+    }
+
+    public static Ray shadowRay(Vector light, Vector pointOfIntersection){
+        return new Ray(Vector.vectorSubtration(light, pointOfIntersection),pointOfIntersection);
     }
     
     

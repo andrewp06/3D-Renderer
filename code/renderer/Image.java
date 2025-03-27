@@ -1,6 +1,11 @@
 package code.renderer;
 
 import javax.imageio.ImageIO;
+
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
+
 import java.awt.*;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -43,6 +48,13 @@ public class Image implements Closeable{
     public void save(String filename) throws IOException {
         ImageIO.write(image, "PNG", new File(filename));
     }
+
+
+    public ImageView toImageView() {
+        WritableImage fxImage = SwingFXUtils.toFXImage(image, null);
+        return new ImageView(fxImage);
+    }
+    
 
     @Override
     public void close() throws IOException {
