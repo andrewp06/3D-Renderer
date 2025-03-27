@@ -2,6 +2,7 @@ package code.renderer;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.Closeable;
 import java.io.File;

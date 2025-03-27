@@ -1,5 +1,6 @@
 package code.renderer;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,6 +130,21 @@ public class Calculate {
         }
         Shape closestShape = shapes.get(tValues.indexOf(smallest));
 
-        return closestShape.getColor();
+        return colorToImageColor(closestShape.getColor());
+    }
+
+    private static Vector surfaceNormal(float t, Ray ray, Sphere sphere){
+        Vector pointOfIntersection = Vector.vectorAddition(ray.origin, Vector.scalarMult(ray.direction, t));
+        Vector normalVector = Vector.vectorSubtration(pointOfIntersection, sphere.center);
+        Vector unitNormal = Vector.scalarMult(normalVector, 1/Vector.magnitude(normalVector));
+        return unitNormal;
+    }
+
+    public static ImageColor colorToImageColor(Color color){
+        return new ImageColor(
+                    Math.round(color.getR()*255),
+                    Math.round(color.getG()*255), 
+                    Math.round(color.getB()*255)
+        );
     }
 }

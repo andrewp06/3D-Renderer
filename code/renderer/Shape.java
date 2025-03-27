@@ -1,6 +1,6 @@
 package code.renderer;
 
 public interface Shape {
-    public ImageColor getColor();
+    public Color getColor();
     public Material getMaterial();
 }

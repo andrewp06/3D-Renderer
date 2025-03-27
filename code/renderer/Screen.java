@@ -71,8 +71,8 @@ public class Screen {
 
     public static void main(String[] args) throws IOException{
         Screen screen = new Screen();
-        screen.addShape(new Sphere(.25f,new Vector(-.5f, 0, 1),new ImageColor(0, 255, 0)));
-        screen.addShape(new Sphere(1f,new Vector(1f, -.5f, 1),new ImageColor(255, 255, 255)));
+        screen.addShape(new Sphere(.25f,new Vector(-.5f, 0, 1),new Color(0, 1, 0)));
+        screen.addShape(new Sphere(1f,new Vector(1f, -.5f, 1),new Color(1, 1, 1)));
         screen.addShape(new Sphere(3f,new Vector(0, .5f, 6)));
         
         screen.addLight(new Light(new Vector(0, 2, 0),new ImageColor(150, 150, 150),new ImageColor(255, 255, 255)));
