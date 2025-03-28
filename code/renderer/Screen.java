@@ -14,9 +14,9 @@ public class Screen {
     Color ambientLight;
 
     public Screen(){
-        image = new Image(1440,1080);
+        image = new Image(3456,2234);
         imagePlane = new ImagePlane();
-        camera = new Vector(0, 0, -1.25f);
+        camera = new Vector(0, 0, -1.5f);
         spheres = new ArrayList<>();
         lights = new ArrayList<>();
     }
@@ -59,48 +59,106 @@ public class Screen {
      * iterates through each pixel, calculates the ray and checks for any intersections with objects
      * it then plots the pixel with the correct color on the image in screen
      */
-    public void shapeTest(){
+    public void shapeTest(int n, int recursion){
         for(int i = 1; i<image.width;i++){
             for(int j = 1; j<image.height;j++){
-                ImageColor color = Calculate.colorToImageColor(SSAA(i,j));
+                ImageColor color = Calculate.colorToImageColor(SSAA(i,j,n,recursion));
                 image.plotPixel(i, j, color);
             }
         }
     }
 
-    private Color SSAA(int xPixel,int yPixel){
+    private Color SSAA(int xPixel,int yPixel,int n,int recursion){
         Color finalColor = new Color(0, 0, 0);
-        for (int i = 0; i<3; i++){
-            for (int j = 0; j<3; j++){
-                Ray ray = Calculate.createRayPoint3SubDivisions(xPixel,yPixel,this,i,j);
-                Color sampleColor = Calculate.shapeInFront(ray, this, 3);
+        for (int i = 0; i<n; i++){
+            for (int j = 0; j<n; j++){
+                Ray ray = Calculate.createRayPoint3SubDivisions(xPixel,yPixel,this,i,j,n);
+                Color sampleColor = Calculate.shapeInFront(ray, this, recursion);
                 finalColor = Calculate.addColors(finalColor, sampleColor);
             }
         }
-        finalColor = new Color(finalColor.getR()/9,finalColor.getG()/9,finalColor.getB()/9);
+        finalColor = new Color(finalColor.getR()/(n*n),finalColor.getG()/(n*n),finalColor.getB()/(n*n));
         return finalColor;
+    }
+
+
+    public void sPlusA(){
+        //s 
+        addSphere(new Sphere(.5f,new Vector(-10, 0, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(-9, 0, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(-8, 0, 20f),new Color(1, 1f, 0)));
+
+        addSphere(new Sphere(.5f,new Vector(-11, 1, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(-11, 2, 20f),new Color(1, 1f, 0)));
+
+        addSphere(new Sphere(.5f,new Vector(-10, 3, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(-9, 3, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(-8, 3, 20f),new Color(1, 1f, 0)));
+
+        addSphere(new Sphere(.5f,new Vector(-7, -1, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(-7, -2, 20f),new Color(1, 1f, 0)));
+
+        addSphere(new Sphere(.5f,new Vector(-10, -3, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(-9, -3, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(-8, -3, 20f),new Color(1, 1f, 0)));
+
+        //A
+        addSphere(new Sphere(.5f,new Vector(10, 0, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(11, 0, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(9, 0, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(8, 0, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(12, 0, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(10, 3, 20),new Color(0f, 0f, 1f)));
+
+        addSphere(new Sphere(.5f,new Vector(8, 1, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(9, 2, 20),new Color(0f, 0f, 1f)));
+
+        addSphere(new Sphere(.5f,new Vector(8, -1, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(8, -2, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(8, -3, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(12, 1, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(11, 2, 20),new Color(0f, 0f, 1f)));
+
+        addSphere(new Sphere(.5f,new Vector(12, -1, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(12, -2, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(12, -3, 20),new Color(0f, 0f, 1f)));
+
+        //+
+        addSphere(new Sphere(.5f,new Vector(0, 0, 20),new Color(.1f, .75f, .2f)));
+        addSphere(new Sphere(.5f,new Vector(0, -1, 20),new Color(.1f, .75f, .2f)));
+        addSphere(new Sphere(.5f,new Vector(0, 1, 20),new Color(.1f, .75f, .2f)));
+        addSphere(new Sphere(.5f,new Vector(1, 0, 20),new Color(.1f, .75f, .2f)));
+        addSphere(new Sphere(.5f,new Vector(-1, 0, 20),new Color(.1f, .75f, .2f)));
+
+
     }
 
     public static void main(String[] args) throws IOException{
         Screen screen = new Screen();
-        screen.addSphere(new Sphere(1f,new Vector(1.25f, -.5f, 5f),new Color(.1f, .7f, .1f)));
-        screen.addSphere(new Sphere(1f,new Vector(0, 0, 3.5f),new Color(.5f,0,0 )));
-        screen.addSphere(new Sphere(1f,new Vector(-4, .5f, 6), new Color(0, 0, .75f)));
+
+        screen.addSphere(new Sphere(1f,new Vector(2f, -.75f, 5f),new Color(.1f, 1f, .1f)));
+        screen.addSphere(new Sphere(1f,new Vector(-.25f, 1.5f, 3.5f),new Color(1,0,0 )));
+        screen.addSphere(new Sphere(1f,new Vector(-2.5f, .5f, 6), new Color(0, 0, 1)));
         
         screen.addLight(new Light(
-            new Vector(-5, 1, 0.5f),
-            new Color(0.8f, 0.8f, 0.8f),
-            new Color(0.8f, 0.8f, 0.8f)
+            new Vector(2, 5, -5),
+            new Color(1),
+            new Color(1)
         ));
         screen.addLight(new Light(
-            new Vector(10, -1, 0.5f),
-            new Color(0.7f, 0.7f, 0.7f),
-            new Color(0.8f, 0.8f, 0.8f)
+            new Vector(-3, 2, -2),
+            new Color(.5f),
+            new Color(.2f)
+        ));
+        screen.addLight(new Light(
+            new Vector(0, 5, 5),
+            new Color(.3f),
+            new Color(.8f)
         ));
 
-        screen.ambientLight = new Color(.1f);
+        screen.ambientLight = new Color(.2f);
 
-        screen.shapeTest();
+        screen.shapeTest(3,1);
         screen.image.save("code/renderer/sphereTest4.png");
     }
 }

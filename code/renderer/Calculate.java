@@ -44,12 +44,12 @@ public class Calculate {
         return p;
     }
 
-    public static Ray createRayPoint3SubDivisions(int xPixel, int yPixel, Screen screen, int subX, int subY){
+    public static Ray createRayPoint3SubDivisions(int xPixel, int yPixel, Screen screen, int subX, int subY, int n){
 
         Image image  = screen.image;
         ImagePlane imagePlane = screen.imagePlane;
-        float deltaAlpha = 1/(3*image.width);
-        float deltaBeta = 1/(3*image.height);
+        float deltaAlpha = 1/(n*image.width);
+        float deltaBeta = 1/(n*image.height);
         float alpha = ((float) xPixel + (subX+.5f)*deltaAlpha )/ image.width;
         float beta = ((float) yPixel + (subY+.5f)*deltaBeta)/ image.height;
 
@@ -220,14 +220,10 @@ public class Calculate {
      * 
      * use the ambient constant on the shpere materal and multiply it by the ambient light of the screen
      * 
-     * @return the color product of the 2 values
+     * @return the ambient term for the light
      */
     private static Color calculateAmbientTerm(Sphere sphere, Screen screen){
-        return new Color(
-                sphere.material.ambiantConstant.getR()*screen.ambientLight.getR(),
-                sphere.material.ambiantConstant.getG()*screen.ambientLight.getG(),
-                sphere.material.ambiantConstant.getB()*screen.ambientLight.getB()
-                );
+        return multColors(sphere.material.ambiantConstant, screen.ambientLight);
     }
 
     /**
@@ -266,12 +262,7 @@ public class Calculate {
                 Vector untiLightVector = Vector.scalarMult(lightVector, 1/Vector.magnitude(lightVector));
                 float dotProduct = Vector.dotProduct(unitNormal, untiLightVector);
                 if(dotProduct>=0){
-                    Color diffuseComponent = new Color(
-                        light.diffuseIntensity.getR()*sphere.material.diffuseConstant*dotProduct,
-                        light.diffuseIntensity.getG()*sphere.material.diffuseConstant*dotProduct,
-                        light.diffuseIntensity.getB()*sphere.material.diffuseConstant*dotProduct
-                    );
-                    
+                    Color diffuseComponent = scalarColorMult(scalarColorMult(light.diffuseIntensity, dotProduct),sphere.material.diffuseConstant);                    
                     //combines the diffuse and specular components
                     totalDiffuseAndSpecularComponent = addColors(diffuseComponent, totalDiffuseAndSpecularComponent);
                     Color specularComponent = calculateSpecularTerm(sphere, screen, unitNormal, pointOfIntersection, untiLightVector, light);
@@ -306,12 +297,7 @@ public class Calculate {
         //calculate values for specular constant
         float dotProduct = Math.max(Vector.dotProduct(reflectance, viewVector), 0);
         float specularColorScalar = (float)Math.pow(dotProduct,sphere.material.shininess)*sphere.material.specularConstant;
-        return new Color(
-                    light.specularIntensity.getR()*specularColorScalar,
-                    light.specularIntensity.getG()*specularColorScalar,
-                    light.specularIntensity.getB()*specularColorScalar
-                );
-
+        return scalarColorMult(light.specularIntensity, specularColorScalar);
     }
 
 
@@ -380,6 +366,10 @@ public class Calculate {
     public static Ray shadowRay(Vector light, Vector pointOfIntersection){
         Vector bias = Vector.scalarMult(pointOfIntersection, 1e-4f); 
         return new Ray(Vector.vectorSubtration(light, Vector.vectorAddition(bias, pointOfIntersection)),pointOfIntersection);
+    }
+
+    public static Color scalarColorMult(Color c, float scalar){
+        return new Color(c.getR()*scalar,c.getG()*scalar,c.getB()*scalar);
     }
     
     

@@ -38,14 +38,14 @@ public class ImageGUI extends Application {
         Screen screen = screenSetUp();
         Button rerender = new Button();
         rerender.setOnAction((ActionEvent event)->{
-            screen.shapeTest();
+            screen.shapeTest(3,0);
         });
         rerender.setText("Re-Render");
         rerender.setMinWidth(screen.image.width);
 
 
 
-        screen.shapeTest();
+        screen.shapeTest(3,0);
 
         ImageView imageView = screen.image.toImageView();
 

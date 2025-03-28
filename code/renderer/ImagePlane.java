@@ -7,10 +7,10 @@ public class ImagePlane {
     Vector bottomRight;
 
     public ImagePlane(){
-        topRight = new Vector(1, (float).75, 0);
-        bottomRight = new Vector(1, (float)-.75, 0);
-        topLeft = new Vector(-1, (float).75, 0);
-        bottomLeft = new Vector(-1, (float)-.75, 0);
+        topRight = new Vector(1, (float)10/16, 0);
+        bottomRight = new Vector(1, (float)-10/16, 0);
+        topLeft = new Vector(-1, (float)10/16, 0);
+        bottomLeft = new Vector(-1, (float)-10/16, 0);
     }
 
     @Override
