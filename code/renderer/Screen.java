@@ -1,5 +1,6 @@
 package code.renderer;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -129,21 +130,39 @@ public class Screen {
         addSphere(new Sphere(.5f,new Vector(0, 1, 20),new Color(.1f, .75f, .2f)));
         addSphere(new Sphere(.5f,new Vector(1, 0, 20),new Color(.1f, .75f, .2f)));
         addSphere(new Sphere(.5f,new Vector(-1, 0, 20),new Color(.1f, .75f, .2f)));
+    }
 
-
+    public void saveImage() throws IOException{
+        String templetFilename = "photos/RenderedImage";
+        int count = 0;
+        while(true){
+            File file = new File(templetFilename+count+".png");
+            if (!file.exists()){
+                image.save(file);
+                image.close();
+                return;
+            }
+            count++;
+        }
     }
 
     public static void main(String[] args) throws IOException{
         Screen screen = new Screen();
 
-        screen.addSphere(new Sphere(1f,new Vector(2f, -.75f, 5f),new Color(.1f, 1f, .1f)));
-        screen.addSphere(new Sphere(1f,new Vector(-.25f, 1.5f, 3.5f),new Color(1,0,0 )));
-        screen.addSphere(new Sphere(1f,new Vector(-2.5f, .5f, 6), new Color(0, 0, 1)));
+        screen.addSphere(new Sphere(1f,new Vector(2f, -.75f, 2f),new Color(.1f, .75f, .1f)));
+        screen.addSphere(new Sphere(1f,new Vector(-.25f, 1.5f, 2.5f),new Color(.8f,.2f,0 )));
+        screen.addSphere(new Sphere(1f,new Vector(-2.5f, .5f, 3), new Color(0, .8f, .8f)));
+        screen.addSphere(new Sphere(.7f,new Vector(0, -.5f, 3.5f), new Color(1f, 0, 0)));
+        screen.addSphere(new Sphere(.75f,new Vector(-1.25f, -1.5f, 3), new Color(.4f, 0, .75f)));
+        screen.addSphere(new Sphere(.75f,new Vector(2f, 1.25f, 2.5f),new Color(.8f,.2f,.4f )));
+
+
+
         
         screen.addLight(new Light(
             new Vector(2, 5, -5),
-            new Color(1),
-            new Color(1)
+            new Color(.8f),
+            new Color(.8f)
         ));
         screen.addLight(new Light(
             new Vector(-3, 2, -2),
@@ -156,9 +175,9 @@ public class Screen {
             new Color(.8f)
         ));
 
-        screen.ambientLight = new Color(.2f);
+        screen.ambientLight = new Color(.05f);
 
-        screen.shapeTest(3,1);
-        screen.image.save("code/renderer/sphereTest4.png");
+        screen.shapeTest(6,1);
+        screen.saveImage();
     }
 }

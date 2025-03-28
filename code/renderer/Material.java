@@ -17,6 +17,6 @@ public class Material {
     }
 
     public Material(){
-        this(new Color(.1f), new Color(1f), .4f,.6f, shininess = 200f);
+        this(new Color(.1f), new Color(.4f), .4f,.2f, 20);
     }
 }

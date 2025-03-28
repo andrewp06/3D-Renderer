@@ -39,14 +39,9 @@ public class Image implements Closeable{
 
         graphics.fillRect(x, y, 1, 1);
     }
-
-    /*
-     * @params filename filename of the file that the image will be stored at
-     * 
-     * stores a copy of the image to a PNG file at the given location 
-     */
-    public void save(String filename) throws IOException {
-        ImageIO.write(image, "PNG", new File(filename));
+    
+    public void save(File file) throws IOException {
+        ImageIO.write(image, "PNG", file);
     }
 
 
