@@ -6,42 +6,37 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 
-import java.awt.*;
-import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 
 
 
-public class Image implements Closeable{
-    private final BufferedImage image;
-    private final Graphics2D graphics;
-    int width;
-    int height;
+public class Image{
+    private final int[] pixelBuffer;
+    private  BufferedImage image;
+    final int width, height;
 
     public Image(int w, int h) {
         image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-        graphics = image.createGraphics();
-        height = h;
         width = w;
+        height = h;
+                
+        pixelBuffer = new int[height*width];
     }
 
     public void plotPixel(int x, int y, ImageColor color) {
-        graphics.setPaint(
-                new Color(
-                        color.getR(),
-                        color.getG(),
-                        color.getB()
-                )
-        );
-
-        graphics.fillRect(x, y, 1, 1);
+        int rgb = (color.getR() << 16) | (color.getG() << 8) | color.getB();
+        pixelBuffer[y * width + x] = rgb;
     }
     
     public void save(File file) throws IOException {
+        updateImage();
         ImageIO.write(image, "PNG", file);
+    }
+
+    private void updateImage() {
+        image.setRGB(0, 0, width, height, pixelBuffer, 0, width);
     }
 
 
@@ -51,9 +46,5 @@ public class Image implements Closeable{
     }
     
 
-    @Override
-    public void close() throws IOException {
-        graphics.dispose();
-    }
     
 }

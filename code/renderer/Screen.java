@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Screen {
     
@@ -69,7 +71,32 @@ public class Screen {
         }
     }
 
-    private Color SSAA(int xPixel,int yPixel,int n,int recursion){
+    private static int computeTileSize(int width, int height, int numThreads) {
+        int minTile = 16;  
+        int maxTile = 128;  
+        int estimatedTile = (int) Math.sqrt((width * height) / (numThreads * 2));
+        return Math.max(minTile, Math.min(maxTile, estimatedTile));
+    }
+
+    public void shapeTestMultiThread(int n, int recursion){
+        int numThreads = Runtime.getRuntime().availableProcessors();
+
+        int tileSize = computeTileSize(image.width, image.height, numThreads);
+
+        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+        for (int x = 0; x < image.width; x += tileSize) {
+            for (int y = 0; y < image.height; y += tileSize) {
+                int endX = Math.min(x + tileSize, image.width);
+                int endY = Math.min(y + tileSize, image.height);
+                executor.submit(new ColorCalcThread(x, endX, y, endY, n, recursion, this));
+            }
+        }
+        executor.shutdown();
+        while (!executor.isTerminated()) {
+        }
+    }
+
+    public Color SSAA(int xPixel,int yPixel,int n,int recursion){
         Color finalColor = new Color(0, 0, 0);
         for (int i = 0; i<n; i++){
             for (int j = 0; j<n; j++){
@@ -85,44 +112,44 @@ public class Screen {
 
     public void sPlusA(){
         //s 
-        addSphere(new Sphere(.5f,new Vector(-10, 0, 20f),new Color(1, 1f, 0)));
-        addSphere(new Sphere(.5f,new Vector(-9, 0, 20f),new Color(1, 1f, 0)));
-        addSphere(new Sphere(.5f,new Vector(-8, 0, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(10, 0, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(9, 0, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(8, 0, 20f),new Color(1, 1f, 0)));
 
-        addSphere(new Sphere(.5f,new Vector(-11, 1, 20f),new Color(1, 1f, 0)));
-        addSphere(new Sphere(.5f,new Vector(-11, 2, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(7, 1, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(7, 2, 20f),new Color(1, 1f, 0)));
 
-        addSphere(new Sphere(.5f,new Vector(-10, 3, 20f),new Color(1, 1f, 0)));
-        addSphere(new Sphere(.5f,new Vector(-9, 3, 20f),new Color(1, 1f, 0)));
-        addSphere(new Sphere(.5f,new Vector(-8, 3, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(10, 3, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(9, 3, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(8, 3, 20f),new Color(1, 1f, 0)));
 
-        addSphere(new Sphere(.5f,new Vector(-7, -1, 20f),new Color(1, 1f, 0)));
-        addSphere(new Sphere(.5f,new Vector(-7, -2, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(11, -1, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(11, -2, 20f),new Color(1, 1f, 0)));
 
-        addSphere(new Sphere(.5f,new Vector(-10, -3, 20f),new Color(1, 1f, 0)));
-        addSphere(new Sphere(.5f,new Vector(-9, -3, 20f),new Color(1, 1f, 0)));
-        addSphere(new Sphere(.5f,new Vector(-8, -3, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(10, -3, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(9, -3, 20f),new Color(1, 1f, 0)));
+        addSphere(new Sphere(.5f,new Vector(8, -3, 20f),new Color(1, 1f, 0)));
 
         //A
-        addSphere(new Sphere(.5f,new Vector(10, 0, 20),new Color(0f, 0f, 1f)));
-        addSphere(new Sphere(.5f,new Vector(11, 0, 20),new Color(0f, 0f, 1f)));
-        addSphere(new Sphere(.5f,new Vector(9, 0, 20),new Color(0f, 0f, 1f)));
-        addSphere(new Sphere(.5f,new Vector(8, 0, 20),new Color(0f, 0f, 1f)));
-        addSphere(new Sphere(.5f,new Vector(12, 0, 20),new Color(0f, 0f, 1f)));
-        addSphere(new Sphere(.5f,new Vector(10, 3, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(-10, 0, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(-11, 0, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(-9, 0, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(-8, 0, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(-12, 0, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(-10, 3, 20),new Color(0f, 0f, 1f)));
 
-        addSphere(new Sphere(.5f,new Vector(8, 1, 20),new Color(0f, 0f, 1f)));
-        addSphere(new Sphere(.5f,new Vector(9, 2, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(-8, 1, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(-9, 2, 20),new Color(0f, 0f, 1f)));
 
-        addSphere(new Sphere(.5f,new Vector(8, -1, 20),new Color(0f, 0f, 1f)));
-        addSphere(new Sphere(.5f,new Vector(8, -2, 20),new Color(0f, 0f, 1f)));
-        addSphere(new Sphere(.5f,new Vector(8, -3, 20),new Color(0f, 0f, 1f)));
-        addSphere(new Sphere(.5f,new Vector(12, 1, 20),new Color(0f, 0f, 1f)));
-        addSphere(new Sphere(.5f,new Vector(11, 2, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(-8, -1, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(-8, -2, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(-8, -3, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(-12, 1, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(-11, 2, 20),new Color(0f, 0f, 1f)));
 
-        addSphere(new Sphere(.5f,new Vector(12, -1, 20),new Color(0f, 0f, 1f)));
-        addSphere(new Sphere(.5f,new Vector(12, -2, 20),new Color(0f, 0f, 1f)));
-        addSphere(new Sphere(.5f,new Vector(12, -3, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(-12, -1, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(-12, -2, 20),new Color(0f, 0f, 1f)));
+        addSphere(new Sphere(.5f,new Vector(-12, -3, 20),new Color(0f, 0f, 1f)));
 
         //+
         addSphere(new Sphere(.5f,new Vector(0, 0, 20),new Color(.1f, .75f, .2f)));
@@ -130,6 +157,22 @@ public class Screen {
         addSphere(new Sphere(.5f,new Vector(0, 1, 20),new Color(.1f, .75f, .2f)));
         addSphere(new Sphere(.5f,new Vector(1, 0, 20),new Color(.1f, .75f, .2f)));
         addSphere(new Sphere(.5f,new Vector(-1, 0, 20),new Color(.1f, .75f, .2f)));
+
+        addLight(new Light(
+            new Vector(2, 5, -5),
+            new Color(.8f),
+            new Color(.8f)
+        ));
+        addLight(new Light(
+            new Vector(0, 10, 25),
+            new Color(.5f),
+            new Color(.2f)
+        ));
+        addLight(new Light(
+            new Vector(0, 25, 18),
+            new Color(.3f),
+            new Color(.8f)
+        ));
     }
 
     public void saveImage() throws IOException{
@@ -139,7 +182,6 @@ public class Screen {
             File file = new File(templetFilename+count+".png");
             if (!file.exists()){
                 image.save(file);
-                image.close();
                 return;
             }
             count++;
@@ -175,9 +217,14 @@ public class Screen {
             new Color(.8f)
         ));
 
-        screen.ambientLight = new Color(.05f);
+        // screen.sPlusA();
 
-        screen.shapeTest(6,1);
+        screen.ambientLight = new Color(.05f);
+        long startTime = System.currentTimeMillis();
+        screen.shapeTestMultiThread(6,3);
         screen.saveImage();
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        System.out.println(estimatedTime);
+
     }
 }
