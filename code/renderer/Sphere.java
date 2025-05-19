@@ -19,6 +19,9 @@ public class Sphere{
     public Sphere(float radius, Vector center){
         this(radius,center,new Color(1,0,0),new Material());
     }
+    public Sphere(){
+        this(1f,new Vector(0,0,0));
+    }
 
     @Override
     public String toString() {

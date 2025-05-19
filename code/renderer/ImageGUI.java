@@ -5,12 +5,11 @@ package code.renderer;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-
-
-
+import javafx.scene.effect.Shadow;
 import javafx.application.*;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -51,8 +50,10 @@ public class ImageGUI extends Application {
         
         Button rerender = new Button();
 
+        HBox mainControl = new HBox();
+        
         VBox vBox = new VBox();
-        vBox.getChildren().addAll(rerender, imageViewPane);
+        vBox.getChildren().addAll(mainControl, imageViewPane);
         VBox.setVgrow(imageViewPane, Priority.ALWAYS);
 
 
@@ -81,9 +82,12 @@ public class ImageGUI extends Application {
 
         updateImage(screen, vBox, imageView);
 
-        // vBox.getChildren().add(new ImageViewPane(new ImageView(new Image("photos/RenderedImage0.png"))));
-        // VBox.setVgrow(vBox.getChildren().get(2), null);
-        // ((ImageViewPane)vBox.getChildren().get(2)).getImageView().setPreserveRatio(true);
+        Button addSphere = new Button("Add Sphere");
+        addSphere.setOnAction((@SuppressWarnings("unused") ActionEvent event)->{
+            screen.addSphere(new Sphere());
+        });
+
+        mainControl.getChildren().addAll(rerender,addSphere);
 
         
         
