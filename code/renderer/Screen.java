@@ -16,12 +16,16 @@ public class Screen {
     List<Light> lights;
     Color ambientLight;
 
-    public Screen(){
-        image = new Image(3456,2234);
+    public Screen(int width, int height){
+        image = new Image(width,height);
         imagePlane = new ImagePlane();
         camera = new Vector(0, 0, -1.5f);
         spheres = new ArrayList<>();
         lights = new ArrayList<>();
+    }
+
+    public Screen(){
+        this(3456,2234);
     }
 
     public Vector getCamera() {
@@ -189,39 +193,26 @@ public class Screen {
     }
 
     public static void main(String[] args) throws IOException{
-        Screen screen = new Screen();
+        Screen screen = new Screen(16,10);
 
         screen.addSphere(new Sphere(1f,new Vector(2f, -.75f, 2f),new Color(.1f, .75f, .1f)));
         screen.addSphere(new Sphere(1f,new Vector(-.25f, 1.5f, 2.5f),new Color(.8f,.2f,0 )));
-        screen.addSphere(new Sphere(1f,new Vector(-2.5f, .5f, 3), new Color(0, .8f, .8f)));
-        screen.addSphere(new Sphere(.7f,new Vector(0, -.5f, 3.5f), new Color(1f, 0, 0)));
-        screen.addSphere(new Sphere(.75f,new Vector(-1.25f, -1.5f, 3), new Color(.4f, 0, .75f)));
-        screen.addSphere(new Sphere(.75f,new Vector(2f, 1.25f, 2.5f),new Color(.8f,.2f,.4f )));
-
-
-
         
         screen.addLight(new Light(
             new Vector(2, 5, -5),
             new Color(.8f),
             new Color(.8f)
         ));
-        screen.addLight(new Light(
-            new Vector(-3, 2, -2),
-            new Color(.5f),
-            new Color(.2f)
-        ));
-        screen.addLight(new Light(
-            new Vector(0, 5, 5),
-            new Color(.3f),
-            new Color(.8f)
-        ));
 
         // screen.sPlusA();
 
         screen.ambientLight = new Color(.05f);
+
+        
         long startTime = System.currentTimeMillis();
-        screen.shapeTestMultiThread(6,3);
+        // screen.shapeTestMultiThread(6,1);
+        screen.shapeTest(6,1);
+
         screen.saveImage();
         long estimatedTime = System.currentTimeMillis() - startTime;
         System.out.println(estimatedTime);

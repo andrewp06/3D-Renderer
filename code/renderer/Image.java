@@ -3,7 +3,6 @@ package code.renderer;
 import javax.imageio.ImageIO;
 
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 
 import java.awt.image.BufferedImage;
@@ -16,6 +15,7 @@ public class Image{
     private final int[] pixelBuffer;
     private  BufferedImage image;
     final int width, height;
+    private WritableImage fxImage;
 
     public Image(int w, int h) {
         image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
@@ -35,14 +35,18 @@ public class Image{
         ImageIO.write(image, "PNG", file);
     }
 
-    private void updateImage() {
+    public void updateImage() {
         image.setRGB(0, 0, width, height, pixelBuffer, 0, width);
     }
 
 
-    public ImageView toImageView() {
-        WritableImage fxImage = SwingFXUtils.toFXImage(image, null);
-        return new ImageView(fxImage);
+    public javafx.scene.image.Image toImageView() {
+        if (fxImage == null || (int) fxImage.getWidth() != image.getWidth() || (int) fxImage.getHeight() != image.getHeight()) {
+            fxImage = new WritableImage(image.getWidth(), image.getHeight());
+        }
+
+        SwingFXUtils.toFXImage(this.image, fxImage);
+        return fxImage;
     }
     
 
