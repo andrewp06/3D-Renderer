@@ -35,4 +35,12 @@ public class Sphere{
     public Material getMaterial() {
         return material;
     }
+    
+    public Vector getCenter() {
+        return center;
+    }
+
+    public float getRadius() {
+        return radius;
+    }
 }
