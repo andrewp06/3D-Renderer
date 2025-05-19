@@ -5,7 +5,8 @@ package code.renderer;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.effect.Shadow;
+import javafx.scene.control.TitledPane;
+
 import javafx.application.*;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
@@ -34,7 +35,7 @@ public class ImageGUI extends Application {
         return screen;
     }
 
-    private void updateImage(Screen screen,VBox vBox,ImageView imageView){
+    private void updateImage(Screen screen, ImageView imageView){
         screen.shapeTestMultiThread(1,1);
         screen.image.updateImage();
         imageView.setImage(screen.image.toImageView());
@@ -51,10 +52,14 @@ public class ImageGUI extends Application {
         Button rerender = new Button();
 
         HBox mainControl = new HBox();
+        HBox main = new HBox();
+        VBox rightPanel = new VBox();
+        VBox objects = new VBox();
+        rightPanel.getChildren().addAll(mainControl,objects);
         
-        VBox vBox = new VBox();
-        vBox.getChildren().addAll(mainControl, imageViewPane);
-        VBox.setVgrow(imageViewPane, Priority.ALWAYS);
+
+        main.getChildren().addAll(imageViewPane,rightPanel );
+        HBox.setHgrow(imageViewPane, Priority.ALWAYS);
 
 
         Screen screen = screenSetUp();
@@ -64,7 +69,7 @@ public class ImageGUI extends Application {
                 screen.shapeTest(1,0);
                
                 Platform.runLater(()->{
-                    updateImage(screen, vBox,imageView);
+                    updateImage(screen, imageView);
                     rerender.setDisable(false);
                 });
 
@@ -80,18 +85,22 @@ public class ImageGUI extends Application {
 
         
 
-        updateImage(screen, vBox, imageView);
+        updateImage(screen, imageView);
 
         Button addSphere = new Button("Add Sphere");
         addSphere.setOnAction((@SuppressWarnings("unused") ActionEvent event)->{
             screen.addSphere(new Sphere());
+            TitledPane tp = new TitledPane();
+            tp.setText("Shpere");
+            tp.setContent(new Button("PlaceHolder"));
+            objects.getChildren().add(tp);
         });
 
         mainControl.getChildren().addAll(rerender,addSphere);
 
         
         
-        Scene scene = new Scene(vBox);
+        Scene scene = new Scene(main);
         stage.setTitle("Image test");
         stage.setScene(scene);
         stage.show();
