@@ -1,11 +1,21 @@
 package code.renderer;
 
+
+import lombok.Setter;
 import lombok.Value;
+import lombok.experimental.NonFinal;
 
 @Value
+
 public class Color {
+    @NonFinal
+    @Setter
     float r;
+    @NonFinal
+    @Setter
     float g;
+    @NonFinal
+    @Setter
     float b;
 
     public Color(float all){
@@ -19,4 +29,6 @@ public class Color {
         this.g = g;
         this.b = b;
     }
+
+    
 }

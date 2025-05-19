@@ -71,12 +71,14 @@ public class ImageGUI extends Application {
         position.setText("Position & Size");
         position.setContent(posGrid);
 
+        TitledPane color = new TitledPane();
+        color.setText("Color");
+        color.setContent(makeTextFieldsForColor(sphere.getColor()));
 
-
-
+    
 
         VBox vbox = new VBox();
-        vbox.getChildren().addAll(nameGrid,position);
+        vbox.getChildren().addAll(nameGrid,position,color);
         tp.setContent(vbox);
         objects.getChildren().add(tp);
     }
@@ -87,7 +89,7 @@ public class ImageGUI extends Application {
         grid.setVgap(4);
         grid.setPadding(new Insets(5, 5, 5, 5));
         grid.add(new Label("X-POS: "), 0, 0);
-        TextField xpos = new TextField("0");
+        TextField xpos = new TextField(vector.x+"");
         xpos.setOnAction((ActionEvent event )->{
             try{
                 float value = Float.parseFloat(xpos.getText());
@@ -97,7 +99,7 @@ public class ImageGUI extends Application {
         grid.add(xpos, 1, 0);
         grid.add(new Label("Y-POS: "), 0, 1);
 
-        TextField ypos = new TextField("0");
+        TextField ypos = new TextField(vector.y+"");
         ypos.setOnAction((ActionEvent event )->{
             try{
                 float value = Float.parseFloat(ypos.getText());
@@ -106,11 +108,53 @@ public class ImageGUI extends Application {
         });
         grid.add(ypos, 1, 1);
         grid.add(new Label("Z-POS: "), 0, 2);
-        TextField zpos = new TextField("0");
+        TextField zpos = new TextField(vector.z+"");
         zpos.setOnAction((ActionEvent event )->{
             try{
                 float value = Float.parseFloat(zpos.getText());
                 vector.z=value;
+            }catch(NumberFormatException e){}
+        });
+        grid.add(zpos, 1, 2);
+        return grid;
+    }
+
+    @SuppressWarnings("unused")
+    private GridPane makeTextFieldsForColor(Color color){
+        GridPane grid = new GridPane();
+        grid.setVgap(4);
+        grid.setPadding(new Insets(5, 5, 5, 5));
+        grid.add(new Label("Red: "), 0, 0);
+        TextField xpos = new TextField(color.getR()+"");
+        xpos.setOnAction((ActionEvent event )->{
+            try{
+                float value = Float.parseFloat(xpos.getText());
+                value = Math.min(1, value);
+                value = Math.max(0,value);
+                color.setR(value);
+            }catch(NumberFormatException e){}
+        });
+        grid.add(xpos, 1, 0);
+        grid.add(new Label("Green: "), 0, 1);
+
+        TextField ypos = new TextField(color.getG()+"");
+        ypos.setOnAction((ActionEvent event )->{
+            try{
+                float value = Float.parseFloat(ypos.getText());
+                value = Math.min(1, value);
+                value = Math.max(0,value);
+                color.setG(value);
+            }catch(NumberFormatException e){}
+        });
+        grid.add(ypos, 1, 1);
+        grid.add(new Label("Blue: "), 0, 2);
+        TextField zpos = new TextField(color.getB()+"");
+        zpos.setOnAction((ActionEvent event )->{
+            try{
+                float value = Float.parseFloat(zpos.getText());
+                value = Math.min(1, value);
+                value = Math.max(0,value);
+                color.setB(value);
             }catch(NumberFormatException e){}
         });
         grid.add(zpos, 1, 2);
