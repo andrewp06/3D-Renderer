@@ -10,4 +10,8 @@ public class Light {
         this.diffuseIntensity = diffuseIntensity;
         this.specularIntensity = specularIntensity;
     }
+
+    public Light(){
+        this(new Vector(0, 1, -1), new Color(.8f), new Color(.8f));
+    }
 }

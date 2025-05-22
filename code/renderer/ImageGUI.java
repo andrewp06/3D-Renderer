@@ -25,13 +25,13 @@ public class ImageGUI extends Application {
         Screen screen = new Screen();
 
         
-        screen.addLight(new Light(
-            new Vector(2, 5, -5),
-            new Color(.8f),
-            new Color(.8f)
-        ));
+        // screen.addLight(new Light(
+        //     new Vector(2, 5, -5),
+        //     new Color(.8f),
+        //     new Color(.8f)
+        // ));
 
-        // screen.sPlusA();
+        // // screen.sPlusA();
 
         screen.ambientLight = new Color(.05f);
         return screen;
@@ -46,7 +46,7 @@ public class ImageGUI extends Application {
     @SuppressWarnings("unused")
     private void makeSphereTitledPane(Sphere sphere, VBox objects){
         TitledPane tp = new TitledPane();
-        tp.setText("Shpere");
+        tp.setText("Sphere");
         GridPane posGrid = makeTextFieldsForVector(sphere.getCenter());
         GridPane nameGrid = new GridPane();
         nameGrid.setVgap(4);
@@ -166,6 +166,7 @@ public class ImageGUI extends Application {
         return grid;
     }
 
+    @SuppressWarnings("unused")
     private TitledPane makeMaterialPane(Sphere sphere){
         TitledPane tp = new TitledPane();
         tp.setText("Material");
@@ -223,6 +224,29 @@ public class ImageGUI extends Application {
     }
 
 
+    private void makeLightTitledPane(Light light, VBox lights){
+        GridPane position = makeTextFieldsForVector(light.location);
+        VBox vBox = new VBox();
+        
+        TitledPane tp = new TitledPane();
+        tp.setText("Light");
+        tp.setContent(vBox);
+
+        GridPane nameGrid = new GridPane();
+
+        nameGrid.add(new Label("Name: "), 0, 0);
+        TextField name = new TextField("Light");
+        name.setOnAction((@SuppressWarnings("unused") ActionEvent event)->{
+            tp.setText(name.getText());
+        }); 
+        nameGrid.add(name, 1,0);
+
+        vBox.getChildren().addAll(nameGrid, position,new Label("Diffuse Intensity:"), makeTextFieldsForColor(light.diffuseIntensity));
+        vBox.getChildren().addAll(new Label("Specular Intenisty:"), makeTextFieldsForColor(light.specularIntensity));
+        lights.getChildren().add(tp);
+    }
+
+
     @Override
     public void start(Stage stage) throws Exception {
 
@@ -235,9 +259,18 @@ public class ImageGUI extends Application {
         HBox mainControl = new HBox();
         HBox main = new HBox();
         VBox rightPanel = new VBox();
+
+        TitledPane objectsTP = new TitledPane();
+        objectsTP.setText("Objects");
         VBox objects = new VBox();
-        rightPanel.getChildren().addAll(mainControl,objects);
+        objectsTP.setContent(objects);
         
+        TitledPane lightsTP = new TitledPane();
+        lightsTP.setText("Lights");
+        VBox lights = new VBox();
+        lightsTP.setContent(lights);
+        
+        rightPanel.getChildren().addAll(mainControl, lightsTP, objectsTP);
 
         main.getChildren().addAll(imageViewPane,rightPanel );
         HBox.setHgrow(imageViewPane, Priority.ALWAYS);
@@ -275,7 +308,21 @@ public class ImageGUI extends Application {
             makeSphereTitledPane(sphere, objects);
         });
 
-        mainControl.getChildren().addAll(rerender,addSphere);
+        Button addLight = new Button("Add Light");
+        addLight.setOnAction((@SuppressWarnings("unused") ActionEvent event) -> {
+            Light light = new Light();
+            screen.addLight(light);
+            makeLightTitledPane(light, lights);
+        });
+
+        TitledPane ambientLightPane = new TitledPane();
+        ambientLightPane.setText("Ambient Light");
+        ambientLightPane.setContent(makeTextFieldsForColor(screen.ambientLight));
+
+        lights.getChildren().add(ambientLightPane);
+
+
+        mainControl.getChildren().addAll(rerender,addSphere,addLight);
 
         
         
