@@ -78,10 +78,12 @@ public class ImageGUI extends Application {
     
 
         VBox vbox = new VBox();
-        vbox.getChildren().addAll(nameGrid,position,color);
+        vbox.getChildren().addAll(nameGrid,position,color, makeMaterialPane(sphere));
         tp.setContent(vbox);
         objects.getChildren().add(tp);
     }
+
+
 
     @SuppressWarnings("unused")
     private GridPane makeTextFieldsForVector(Vector vector){
@@ -134,8 +136,9 @@ public class ImageGUI extends Application {
                 color.setR(value);
             }catch(NumberFormatException e){}
         });
+        xpos.setMaxWidth(40);
         grid.add(xpos, 1, 0);
-        grid.add(new Label("Green: "), 0, 1);
+        grid.add(new Label("Green: "), 2, 0);
 
         TextField ypos = new TextField(color.getG()+"");
         ypos.setOnAction((ActionEvent event )->{
@@ -146,8 +149,9 @@ public class ImageGUI extends Application {
                 color.setG(value);
             }catch(NumberFormatException e){}
         });
-        grid.add(ypos, 1, 1);
-        grid.add(new Label("Blue: "), 0, 2);
+        ypos.setMaxWidth(40);
+        grid.add(ypos, 3, 0);
+        grid.add(new Label("Blue: "), 4, 0);
         TextField zpos = new TextField(color.getB()+"");
         zpos.setOnAction((ActionEvent event )->{
             try{
@@ -157,8 +161,65 @@ public class ImageGUI extends Application {
                 color.setB(value);
             }catch(NumberFormatException e){}
         });
-        grid.add(zpos, 1, 2);
+        zpos.setMaxWidth(40);
+        grid.add(zpos, 5, 0);
         return grid;
+    }
+
+    private TitledPane makeMaterialPane(Sphere sphere){
+        TitledPane tp = new TitledPane();
+        tp.setText("Material");
+        VBox vBox = new VBox();
+        vBox.getChildren().addAll(new Label("Ambient Constant:"), makeTextFieldsForColor(sphere.material.ambiantConstant));
+        vBox.getChildren().addAll(new Label("Reflectivity:"), makeTextFieldsForColor(sphere.material.reflectivity));
+        GridPane grid = new GridPane();
+        grid.add(new Label("Diffuse Constant: "),0,0);
+        TextField diffConst = new TextField(sphere.material.diffuseConstant+"");
+        diffConst.setOnAction((ActionEvent event )->{
+            try{
+                float value = Float.parseFloat(diffConst.getText());
+                value = Math.min(1, value);
+                value = Math.max(0,value);
+                sphere.material.diffuseConstant = value;
+            }catch(NumberFormatException e){}
+        });
+
+        grid.add(diffConst,1,0);
+
+
+        grid.add(new Label("Specular Constant: "),0,1);
+        TextField specConst = new TextField(sphere.material.diffuseConstant+"");
+        specConst.setOnAction((ActionEvent event )->{
+            try{
+                float value = Float.parseFloat(specConst.getText());
+                value = Math.min(1, value);
+                value = Math.max(0,value);
+                sphere.material.specularConstant = value;
+            }catch(NumberFormatException e){}
+        });
+
+        grid.add(specConst,1,1);
+
+
+        grid.add(new Label("Shininess: "),0,2);
+        TextField shiny = new TextField(sphere.material.diffuseConstant+"");
+        shiny.setOnAction((ActionEvent event )->{
+            try{
+                float value = Float.parseFloat(shiny.getText());
+                value = Math.min(1, value);
+                value = Math.max(0,value);
+                sphere.material.specularConstant = value;
+            }catch(NumberFormatException e){}
+        });
+
+        grid.add(shiny,1,2);
+
+        vBox.getChildren().add(grid);
+
+        tp.setContent(vBox);
+
+        return tp;
+
     }
 
 
