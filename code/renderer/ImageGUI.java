@@ -7,10 +7,16 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+
+import java.io.IOException;
+
 import javafx.application.*;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -441,14 +447,49 @@ public class ImageGUI extends Application {
         scrollPane.setVbarPolicy(ScrollBarPolicy.NEVER);
 
 
-        rightPanel.setMinWidth(320);
+
         lightsTP.setMinWidth(350);
         objectsTP.setMinWidth(350);
 
         
         rightPanel.getChildren().addAll(mainControl, scrollPane);
 
-        main.getChildren().addAll(imageViewPane,rightPanel );
+
+        MenuBar topRibbon = new MenuBar();
+        Menu file = new Menu();
+        file.setText("File");
+
+        MenuItem newItem = new MenuItem("New");
+        newItem.setOnAction((ActionEvent event)->{
+            //TODO
+        });
+        MenuItem openItem = new MenuItem("Open");
+        openItem.setOnAction((ActionEvent event)->{
+            //TODO make some sort of pop up
+        });
+        MenuItem saveConfig = new MenuItem("Save Config");
+        saveConfig.setOnAction((ActionEvent event)->{
+            try {
+                screen.toTxt();
+            } catch (IOException e) {}
+        });
+        MenuItem saveImage = new MenuItem("Save Image");
+        saveImage.setOnAction((ActionEvent event)->{
+            try {
+                screen.saveImage();
+            } catch (IOException e) {}
+        });
+
+        topRibbon.getMenus().addAll(file);
+
+        file.getItems().addAll(newItem,openItem,saveConfig,saveImage);
+
+
+
+        VBox leftSide = new VBox();
+        leftSide.getChildren().addAll(topRibbon,imageViewPane);
+
+        main.getChildren().addAll(leftSide,rightPanel);
         HBox.setHgrow(imageViewPane, Priority.ALWAYS);
 
 
@@ -490,10 +531,6 @@ public class ImageGUI extends Application {
             makeLightTitledPane(light, lights, screen);
         });
 
-        Button export = new Button("Export");
-        export.setOnAction((ActionEvent event)->{
-            System.out.println(screen);
-        });
 
         TitledPane ambientLightPane = new TitledPane();
         ambientLightPane.setText("Ambient Light");
@@ -505,7 +542,7 @@ public class ImageGUI extends Application {
         mainControl.setMinWidth(350);
 
 
-        mainControl.getChildren().addAll(rerender,addSphere,addLight,export);
+        mainControl.getChildren().addAll(rerender,addSphere,addLight);
         
         
         Scene scene = new Scene(main);
