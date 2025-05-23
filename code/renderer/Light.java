@@ -14,4 +14,9 @@ public class Light {
     public Light(){
         this(new Vector(0, 1, -1), new Color(.8f), new Color(.8f));
     }
+
+    @Override
+    public String toString() {
+        return "Light - |location = "+ location+", Diffuse Intensity = "+diffuseIntensity+", Specular Intensity = "+ specularIntensity+"|";
+    }
 }

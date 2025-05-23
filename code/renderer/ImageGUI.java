@@ -410,15 +410,15 @@ public class ImageGUI extends Application {
         settingsGrid.add(SSAAsamplesFeild, 1,0);
 
         settingsGrid.add(new Label("  Reflection Recursion Depth: "), 0, 1);
-        TextField recursionDepthField = new TextField(screen.recusionDepth+"");
+        TextField recursionDepthField = new TextField(screen.recursionDepth+"");
         recursionDepthField.setOnAction(( ActionEvent event)->{
             try{
                 int value = Integer.parseInt(recursionDepthField.getText());
                 value = Math.max(0,value);
-                screen.recusionDepth=value;
+                screen.recursionDepth=value;
                 recursionDepthField.setText(value+"");
             }catch(NumberFormatException e){
-                recursionDepthField.setText(screen.recusionDepth+"");
+                recursionDepthField.setText(screen.recursionDepth+"");
             }
         }); 
         recursionDepthField.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
@@ -490,6 +490,11 @@ public class ImageGUI extends Application {
             makeLightTitledPane(light, lights, screen);
         });
 
+        Button export = new Button("Export");
+        export.setOnAction((ActionEvent event)->{
+            System.out.println(screen);
+        });
+
         TitledPane ambientLightPane = new TitledPane();
         ambientLightPane.setText("Ambient Light");
         ambientLightPane.setContent(makeTextFieldsForColor(screen.ambientLight));
@@ -497,8 +502,10 @@ public class ImageGUI extends Application {
         lights.getChildren().add(ambientLightPane);
 
 
-        mainControl.getChildren().addAll(rerender,addSphere,addLight);
+        mainControl.setMinWidth(350);
 
+
+        mainControl.getChildren().addAll(rerender,addSphere,addLight,export);
         
         
         Scene scene = new Scene(main);

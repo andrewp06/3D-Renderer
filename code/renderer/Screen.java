@@ -16,7 +16,7 @@ public class Screen {
     List<Light> lights;
     Color ambientLight;
     int SSAAsamples;
-    int recusionDepth;
+    int recursionDepth;
 
     public Screen(int width, int height){
         image = new Image(width,height);
@@ -25,7 +25,7 @@ public class Screen {
         spheres = new ArrayList<>();
         lights = new ArrayList<>();
         SSAAsamples = 1;
-        recusionDepth = 1;
+        recursionDepth = 1;
     }
 
     public List<Light> getLights() {
@@ -100,7 +100,7 @@ public class Screen {
             for (int y = 0; y < image.height; y += tileSize) {
                 int endX = Math.min(x + tileSize, image.width);
                 int endY = Math.min(y + tileSize, image.height);
-                executor.submit(new ColorCalcThread(x, endX, y, endY, SSAAsamples, recusionDepth, this));
+                executor.submit(new ColorCalcThread(x, endX, y, endY, SSAAsamples, recursionDepth, this));
             }
         }
         executor.shutdown();
@@ -199,6 +199,25 @@ public class Screen {
             count++;
         }
     }
+
+    @Override
+    public String toString() {
+        String result = "\nScreen: \n"+" Ambient Light = "+ ambientLight+"\n SSAA Sample Size = "+SSAAsamples+"\n Reflection Recursion Depth = "+recursionDepth+"\n Lights:\n";
+
+        for (Light light : lights) {
+            result+="\t"+light+"\n";
+        }
+
+        result+=" Objects:\n";
+
+        for (Sphere sphere : spheres) {
+            result+="\t"+sphere+"\n";
+        }
+
+        return result;
+    }
+
+
 
     public static void main(String[] args) throws IOException{
         Screen screen = new Screen(16,10);

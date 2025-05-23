@@ -19,4 +19,9 @@ public class Material {
     public Material(){
         this(new Color(.1f), new Color(.4f), .4f,.2f, 20);
     }
+
+    @Override
+    public String toString() {
+        return "{Ambient Constant = "+ambiantConstant+", Reflectivity = "+reflectivity+", Diffuse Constant = "+diffuseConstant+", Specular Constant = "+ specularConstant+", Shininess = "+ shininess+"}";
+    }
 }
