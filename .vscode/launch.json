@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Sphere",
+            "request": "launch",
+            "mainClass": "code.renderer.Sphere",
+            "projectName": "3D-Renderer_54a4637f"
+        },
+        {
+            "type": "java",
             "name": "Material",
             "request": "launch",
             "mainClass": "code.renderer.Material",

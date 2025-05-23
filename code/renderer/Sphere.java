@@ -1,5 +1,6 @@
 package code.renderer;
 
+
 public class Sphere{
     float radius;
     Vector center;
@@ -42,5 +43,23 @@ public class Sphere{
 
     public float getRadius() {
         return radius;
+    }
+
+    public static Sphere fromString(String input){
+        String[] sphereIn = input.split("\\|");
+        sphereIn = sphereIn[1].split("\\. ");
+
+        float radius = Float.parseFloat(sphereIn[0].split(":")[1]);
+        Vector center = Vector.fromString(sphereIn[1].split(":")[1]);
+        Color color = Color.fromString(sphereIn[2].split(":")[1]);
+        Material material = Material.fromString(sphereIn[3].split(":")[1]);
+
+        return new Sphere(radius,center,color,material);
+
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new Sphere());
+        System.out.println(fromString(new Sphere()+""));
     }
 }
