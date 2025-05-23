@@ -15,6 +15,8 @@ public class Screen {
     List<Sphere> spheres;
     List<Light> lights;
     Color ambientLight;
+    int SSAAsamples;
+    int recusionDepth;
 
     public Screen(int width, int height){
         image = new Image(width,height);
@@ -22,6 +24,8 @@ public class Screen {
         camera = new Vector(0, 0, -1.5f);
         spheres = new ArrayList<>();
         lights = new ArrayList<>();
+        SSAAsamples = 1;
+        recusionDepth = 1;
     }
 
     public Screen(){

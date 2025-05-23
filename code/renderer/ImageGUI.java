@@ -341,6 +341,7 @@ public class ImageGUI extends Application {
 
 
 
+    @SuppressWarnings("unused")
     @Override
     public void start(Stage stage) throws Exception {
 
@@ -353,6 +354,8 @@ public class ImageGUI extends Application {
         HBox mainControl = new HBox();
         HBox main = new HBox();
         VBox rightPanel = new VBox();
+
+        Screen screen = screenSetUp();
 
         TitledPane objectsTP = new TitledPane();
         objectsTP.setText("Objects");
@@ -367,7 +370,56 @@ public class ImageGUI extends Application {
         ScrollPane scrollPane = new ScrollPane();
 
         VBox items = new VBox();
-        items.getChildren().addAll(lightsTP,objectsTP);
+
+
+        GridPane settingsGrid = new GridPane();
+        settingsGrid.add(new Label("  Number of SSAA Samples: "), 0, 0);
+        TextField SSAAsamplesFeild = new TextField(screen.SSAAsamples+"");
+        SSAAsamplesFeild.setOnAction(( ActionEvent event)->{
+            try{
+                int value = Integer.parseInt(SSAAsamplesFeild.getText());
+                value = Math.max(0,value);
+                screen.SSAAsamples=value;
+                SSAAsamplesFeild.setText(value+"");
+            }catch(NumberFormatException e){
+                SSAAsamplesFeild.setText(screen.SSAAsamples+"");
+            }
+        }); 
+        SSAAsamplesFeild.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (!isNowFocused) {
+        
+                if (SSAAsamplesFeild.getOnAction() != null) {
+                    SSAAsamplesFeild.getOnAction().handle(new ActionEvent());
+                }
+            }
+        });
+        settingsGrid.add(SSAAsamplesFeild, 1,0);
+
+        settingsGrid.add(new Label("  Reflection Recursion Depth: "), 0, 1);
+        TextField recursionDepthField = new TextField(screen.recusionDepth+"");
+        recursionDepthField.setOnAction(( ActionEvent event)->{
+            try{
+                int value = Integer.parseInt(recursionDepthField.getText());
+                value = Math.max(0,value);
+                screen.recusionDepth=value;
+                recursionDepthField.setText(value+"");
+            }catch(NumberFormatException e){
+                recursionDepthField.setText(screen.recusionDepth+"");
+            }
+        }); 
+        recursionDepthField.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (!isNowFocused) {
+        
+                if (recursionDepthField.getOnAction() != null) {
+                    recursionDepthField.getOnAction().handle(new ActionEvent());
+                }
+            }
+        });
+        settingsGrid.add(recursionDepthField, 1,1);
+
+
+
+        items.getChildren().addAll(settingsGrid,lightsTP,objectsTP);
 
         scrollPane.setContent(scrollPane);
         scrollPane.setContent(items);
@@ -386,8 +438,7 @@ public class ImageGUI extends Application {
         HBox.setHgrow(imageViewPane, Priority.ALWAYS);
 
 
-        Screen screen = screenSetUp();
-        rerender.setOnAction((@SuppressWarnings("unused") ActionEvent event)->{
+        rerender.setOnAction(( ActionEvent event)->{
             rerender.setDisable(true);
             new Thread(()->{
                 screen.shapeTest(1,0);
@@ -412,14 +463,14 @@ public class ImageGUI extends Application {
         updateImage(screen, imageView);
 
         Button addSphere = new Button("Add Sphere");
-        addSphere.setOnAction((@SuppressWarnings("unused") ActionEvent event)->{
+        addSphere.setOnAction(( ActionEvent event)->{
             Sphere sphere = new Sphere();
             screen.addSphere(sphere);
             makeSphereTitledPane(sphere, objects);
         });
 
         Button addLight = new Button("Add Light");
-        addLight.setOnAction((@SuppressWarnings("unused") ActionEvent event) -> {
+        addLight.setOnAction(( ActionEvent event) -> {
             Light light = new Light();
             screen.addLight(light);
             makeLightTitledPane(light, lights);
