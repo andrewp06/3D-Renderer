@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
+
 public class Screen {
     
     Image image;
@@ -202,29 +204,57 @@ public class Screen {
 
     @Override
     public String toString() {
-        String result = "\nScreen: \n"+" Ambient Light = "+ ambientLight+"\n SSAA Sample Size = "+SSAAsamples+"\n Reflection Recursion Depth = "+recursionDepth+"\n Lights:\n";
+        String result = "\nScreen: \n"+" Ambient Light~"+ ambientLight+"\n SSAA Sample Size~"+SSAAsamples+"\n Reflection Recursion Depth~"+recursionDepth+"\n* Lights:\n";
 
         for (Light light : lights) {
-            result+="\t"+light+"\n";
+            result+=light+"\n";
         }
 
-        result+=" Objects:\n";
+        result+="* Objects:\n";
 
         for (Sphere sphere : spheres) {
-            result+="\t"+sphere+"\n";
+            result+=sphere+"\n";
         }
 
         return result;
     }
 
     public void fromString(String input){
-        //TODO use static functions from each sphere and light
+        spheres = new ArrayList<>();
+        lights = new ArrayList<>();
+
+        String[] mainIn = input.split("\\* ");
+        String[] screenSettingsIn = mainIn[0].split("\n");
+        String[] lightsIn = mainIn[1].split("\n");
+        String[] objectsIn = mainIn[2].split("\n");
+
+
+
+        ambientLight = Color.fromString(screenSettingsIn[2].split("~")[1]);
+        SSAAsamples = Integer.parseInt(screenSettingsIn[3].split("~")[1]);
+        recursionDepth = Integer.parseInt(screenSettingsIn[4].split("~")[1]);
+
+
+        for (String object : objectsIn) {
+            if (object.equals("Objects:")){
+                continue;
+            }
+            spheres.add(Sphere.fromString(object));
+        }
+
+        for (String light : lightsIn) {
+            if (light.equals("Lights:")){
+                continue;
+            }
+            lights.add(Light.fromString(light));
+        }
+        
     }
 
 
 
     public static void main(String[] args) throws IOException{
-        Screen screen = new Screen(16,10);
+        Screen screen = new Screen();
 
         screen.addSphere(new Sphere(1f,new Vector(2f, -.75f, 2f),new Color(.1f, .75f, .1f)));
         screen.addSphere(new Sphere(1f,new Vector(-.25f, 1.5f, 2.5f),new Color(.8f,.2f,0 )));
@@ -239,14 +269,24 @@ public class Screen {
 
         screen.ambientLight = new Color(.05f);
 
-        
-        long startTime = System.currentTimeMillis();
-        // screen.shapeTestMultiThread(6,1);
-        screen.shapeTest(6,1);
+        System.out.println(screen+"\n\n\n");
 
+        Screen newScreen = new Screen();
+        newScreen.fromString(screen+"");
+
+        screen.shapeTestMultiThread();
+        
         screen.saveImage();
-        long estimatedTime = System.currentTimeMillis() - startTime;
-        System.out.println(estimatedTime);
+        
+        // long startTime = System.currentTimeMillis();
+        // // screen.shapeTestMultiThread(6,1);
+        // screen.shapeTest(6,1);
+
+        // screen.saveImage();
+        // long estimatedTime = System.currentTimeMillis() - startTime;
+        // System.out.println(estimatedTime);
+
+
 
     }
 }
