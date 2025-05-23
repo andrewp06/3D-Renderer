@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.application.*;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -57,6 +58,14 @@ public class ImageGUI extends Application {
         name.setOnAction((ActionEvent event)->{
             tp.setText(name.getText());
         }); 
+        name.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (!isNowFocused) {
+        
+                if (name.getOnAction() != null) {
+                    name.getOnAction().handle(new ActionEvent());
+                }
+            }
+        });
         nameGrid.add(name, 1,0);
 
         posGrid.add(new Label("Radius: "), 0, 3);
@@ -127,6 +136,20 @@ public class ImageGUI extends Application {
             }
         });
         grid.add(zpos, 1, 2);
+
+        for (Node node : grid.getChildren()) {
+            if (node instanceof TextField textField) {
+                textField.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+                    if (!isNowFocused) {
+                        
+                        if (textField.getOnAction() != null) {
+                            textField.getOnAction().handle(new ActionEvent());
+                        }
+                    }
+                });
+            }
+        }
+
         return grid;
     }
 
@@ -143,6 +166,7 @@ public class ImageGUI extends Application {
                 value = Math.min(1, value);
                 value = Math.max(0,value);
                 color.setR(value);
+                xpos.setText(value+"");
             }catch(NumberFormatException e){
                 xpos.setText(color.getR()+"");
             }
@@ -158,6 +182,7 @@ public class ImageGUI extends Application {
                 value = Math.min(1, value);
                 value = Math.max(0,value);
                 color.setG(value);
+                ypos.setText(value+"");
             }catch(NumberFormatException e){
                 ypos.setText(color.getG()+"");
             }
@@ -172,12 +197,27 @@ public class ImageGUI extends Application {
                 value = Math.min(1, value);
                 value = Math.max(0,value);
                 color.setB(value);
+                zpos.setText(value+"");
             }catch(NumberFormatException e){
                 zpos.setText(color.getB()+"");
             }
         });
         zpos.setMaxWidth(40);
         grid.add(zpos, 5, 0);
+
+        for (Node node : grid.getChildren()) {
+            if (node instanceof TextField textField) {
+                textField.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+                    if (!isNowFocused) {
+                        
+                        if (textField.getOnAction() != null) {
+                            textField.getOnAction().handle(new ActionEvent());
+                        }
+                    }
+                });
+            }
+        }
+
         return grid;
     }
 
@@ -197,6 +237,8 @@ public class ImageGUI extends Application {
                 value = Math.min(1, value);
                 value = Math.max(0,value);
                 sphere.material.diffuseConstant = value;
+                diffConst.setText(value+"");
+
             }catch(NumberFormatException e){
                 diffConst.setText(sphere.material.diffuseConstant+"");
 
@@ -214,8 +256,18 @@ public class ImageGUI extends Application {
                 value = Math.min(1, value);
                 value = Math.max(0,value);
                 sphere.material.specularConstant = value;
+                specConst.setText(value+"");
             }catch(NumberFormatException e){
                 specConst.setText(sphere.material.specularConstant+"");
+            }
+        });
+
+        specConst.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (!isNowFocused) {
+        
+                if (specConst.getOnAction() != null) {
+                    specConst.getOnAction().handle(new ActionEvent());
+                }
             }
         });
 
@@ -230,8 +282,19 @@ public class ImageGUI extends Application {
                 value = Math.min(1, value);
                 value = Math.max(0,value);
                 sphere.material.shininess = value;
+                shiny.setText(value+"");
             }catch(NumberFormatException e){
                 shiny.setText(sphere.material.shininess+"");
+            }
+        });
+
+
+        shiny.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (!isNowFocused) {
+        
+                if (shiny.getOnAction() != null) {
+                    shiny.getOnAction().handle(new ActionEvent());
+                }
             }
         });
 
@@ -245,7 +308,7 @@ public class ImageGUI extends Application {
 
     }
 
-
+    @SuppressWarnings("unused")
     private void makeLightTitledPane(Light light, VBox lights){
         GridPane position = makeTextFieldsForVector(light.location);
         VBox vBox = new VBox();
@@ -258,15 +321,24 @@ public class ImageGUI extends Application {
 
         nameGrid.add(new Label("Name: "), 0, 0);
         TextField name = new TextField("Light");
-        name.setOnAction((@SuppressWarnings("unused") ActionEvent event)->{
+        name.setOnAction(( ActionEvent event)->{
             tp.setText(name.getText());
         }); 
+        name.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (!isNowFocused) {
+        
+                if (name.getOnAction() != null) {
+                    name.getOnAction().handle(new ActionEvent());
+                }
+            }
+        });
         nameGrid.add(name, 1,0);
 
         vBox.getChildren().addAll(nameGrid, position,new Label("Diffuse Intensity:"), makeTextFieldsForColor(light.diffuseIntensity));
         vBox.getChildren().addAll(new Label("Specular Intenisty:"), makeTextFieldsForColor(light.specularIntensity));
         lights.getChildren().add(tp);
     }
+
 
 
     @Override
