@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Vector",
+            "request": "launch",
+            "mainClass": "code.renderer.Vector",
+            "projectName": "3D-Renderer_54a4637f"
+        },
+        {
+            "type": "java",
             "name": "Color",
             "request": "launch",
             "mainClass": "code.renderer.Color",

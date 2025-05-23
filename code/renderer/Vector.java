@@ -31,9 +31,27 @@ public class Vector {
         return (float)Math.sqrt(Math.pow(a.x,2)+Math.pow(a.y,2)+Math.pow(a.z,2));
     }
 
+    public static Vector fromString(String input){
+        String[] vectorIn = input.split("<");
+        vectorIn = vectorIn[1].split(">");
+        vectorIn = vectorIn[0].split(", ");
+        float x = Float.parseFloat(vectorIn[0]);
+        float y = Float.parseFloat(vectorIn[1]);
+        float z = Float.parseFloat(vectorIn[2]);
+
+        return new Vector(x, y, z);
+    }
+
 
     @Override
     public String toString() {
         return "<"+x+", "+y+", "+z+">";
+    }
+
+
+    public static void main(String[] args) {
+        System.out.println(new Vector(1, 2.2f, 0));
+        System.out.println(fromString(new Vector(1, 2.2f, 0)+""));
+
     }
 }

@@ -16,7 +16,7 @@ public class Light {
     }
 
     public static Light fromString(String string){
-        //TODO 
+        //TODO
         return new Light();
     }
 
