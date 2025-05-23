@@ -1,6 +1,5 @@
 package code.renderer;
 
-import java.util.Arrays;
 
 public class Light {
     Vector location;

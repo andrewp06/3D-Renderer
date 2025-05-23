@@ -1,5 +1,7 @@
 package code.renderer;
 
+import java.util.Arrays;
+
 public class Material {
     Color ambiantConstant;
     Color reflectivity;
@@ -22,6 +24,25 @@ public class Material {
 
     @Override
     public String toString() {
-        return "{Ambient Constant"+ambiantConstant+"\\ Reflectivity~"+reflectivity+"\\ Diffuse Constant~"+diffuseConstant+"\\ Specular Constant~"+ specularConstant+"\\ Shininess~"+ shininess+"}";
+        return "{Ambient Constant~"+ambiantConstant+"/ Reflectivity~"+reflectivity+"/ Diffuse Constant~"+diffuseConstant+"/ Specular Constant~"+ specularConstant+"/ Shininess~"+ shininess+"}";
+    }
+
+    public static Material fromString(String input){
+        String[] materialIn = input.split("\\{");
+        materialIn = materialIn[1].split("\\}");
+        materialIn = materialIn[0].split("/ ");
+
+        Color ambientConstant = Color.fromString(materialIn[0].split("~")[1]);
+        Color reflectivity = Color.fromString(materialIn[1].split("~")[1]);
+        float diffuseConstant = Float.parseFloat(materialIn[2].split("~")[1]);
+        float specularConstant = Float.parseFloat(materialIn[3].split("~")[1]);
+        float shininess = Float.parseFloat(materialIn[4].split("~")[1]);
+
+        return new Material(ambientConstant,reflectivity,diffuseConstant,specularConstant,shininess);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new Material());
+        System.out.println(fromString(new Material()+""));
     }
 }
