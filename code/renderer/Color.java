@@ -30,6 +30,7 @@ public class Color {
         this.b = b;
     }
 
+
     public static Color fromString(String input){
         String[] colorStrings = input.split("\\(");
         colorStrings = colorStrings[1].split("\\)");

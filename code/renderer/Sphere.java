@@ -25,7 +25,7 @@ public class Sphere{
 
     @Override
     public String toString() {
-        return "Sphere - |R = "+radius+", Center = "+center+", Color = "+color+", Material = "+material+"|";
+        return "Sphere - |R:"+radius+". Center:"+center+". Color:"+color+". Material:"+material+"|";
     }
 
     public Color getColor() {
