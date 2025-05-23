@@ -64,7 +64,9 @@ public class ImageGUI extends Application {
         radius.setOnAction((ActionEvent event)->{
             try{
                 sphere.radius = Float.parseFloat(radius.getText());
-            }catch(NumberFormatException e){}
+            }catch(NumberFormatException e){
+                radius.setText(sphere.radius+"");
+            }
         }); 
         posGrid.add(radius, 1, 3);
 
@@ -97,7 +99,9 @@ public class ImageGUI extends Application {
             try{
                 float value = Float.parseFloat(xpos.getText());
                 vector.x=value;
-            }catch(NumberFormatException e){}
+            }catch(NumberFormatException e){
+                xpos.setText(vector.x+"");
+            }
         });
         grid.add(xpos, 1, 0);
         grid.add(new Label("Y-POS: "), 0, 1);
@@ -107,7 +111,9 @@ public class ImageGUI extends Application {
             try{
                 float value = Float.parseFloat(ypos.getText());
                 vector.y=value;
-            }catch(NumberFormatException e){}
+            }catch(NumberFormatException e){
+                ypos.setText(vector.y+"");
+            }
         });
         grid.add(ypos, 1, 1);
         grid.add(new Label("Z-POS: "), 0, 2);
@@ -116,7 +122,9 @@ public class ImageGUI extends Application {
             try{
                 float value = Float.parseFloat(zpos.getText());
                 vector.z=value;
-            }catch(NumberFormatException e){}
+            }catch(NumberFormatException e){
+                zpos.setText(vector.z+"");
+            }
         });
         grid.add(zpos, 1, 2);
         return grid;
@@ -135,7 +143,9 @@ public class ImageGUI extends Application {
                 value = Math.min(1, value);
                 value = Math.max(0,value);
                 color.setR(value);
-            }catch(NumberFormatException e){}
+            }catch(NumberFormatException e){
+                xpos.setText(color.getR()+"");
+            }
         });
         xpos.setMaxWidth(40);
         grid.add(xpos, 1, 0);
@@ -148,7 +158,9 @@ public class ImageGUI extends Application {
                 value = Math.min(1, value);
                 value = Math.max(0,value);
                 color.setG(value);
-            }catch(NumberFormatException e){}
+            }catch(NumberFormatException e){
+                ypos.setText(color.getG()+"");
+            }
         });
         ypos.setMaxWidth(40);
         grid.add(ypos, 3, 0);
@@ -160,7 +172,9 @@ public class ImageGUI extends Application {
                 value = Math.min(1, value);
                 value = Math.max(0,value);
                 color.setB(value);
-            }catch(NumberFormatException e){}
+            }catch(NumberFormatException e){
+                zpos.setText(color.getB()+"");
+            }
         });
         zpos.setMaxWidth(40);
         grid.add(zpos, 5, 0);
@@ -183,35 +197,42 @@ public class ImageGUI extends Application {
                 value = Math.min(1, value);
                 value = Math.max(0,value);
                 sphere.material.diffuseConstant = value;
-            }catch(NumberFormatException e){}
+            }catch(NumberFormatException e){
+                diffConst.setText(sphere.material.diffuseConstant+"");
+
+            }
         });
 
         grid.add(diffConst,1,0);
 
 
         grid.add(new Label("Specular Constant: "),0,1);
-        TextField specConst = new TextField(sphere.material.diffuseConstant+"");
+        TextField specConst = new TextField(sphere.material.specularConstant+"");
         specConst.setOnAction((ActionEvent event )->{
             try{
                 float value = Float.parseFloat(specConst.getText());
                 value = Math.min(1, value);
                 value = Math.max(0,value);
                 sphere.material.specularConstant = value;
-            }catch(NumberFormatException e){}
+            }catch(NumberFormatException e){
+                specConst.setText(sphere.material.specularConstant+"");
+            }
         });
 
         grid.add(specConst,1,1);
 
 
         grid.add(new Label("Shininess: "),0,2);
-        TextField shiny = new TextField(sphere.material.diffuseConstant+"");
+        TextField shiny = new TextField(sphere.material.shininess+"");
         shiny.setOnAction((ActionEvent event )->{
             try{
                 float value = Float.parseFloat(shiny.getText());
                 value = Math.min(1, value);
                 value = Math.max(0,value);
-                sphere.material.specularConstant = value;
-            }catch(NumberFormatException e){}
+                sphere.material.shininess = value;
+            }catch(NumberFormatException e){
+                shiny.setText(sphere.material.shininess+"");
+            }
         });
 
         grid.add(shiny,1,2);
