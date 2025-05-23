@@ -28,6 +28,10 @@ public class Screen {
         recusionDepth = 1;
     }
 
+    public List<Light> getLights() {
+        return lights;
+    }
+
     public Screen(){
         this(3456,2234);
     }
@@ -86,7 +90,7 @@ public class Screen {
         return Math.max(minTile, Math.min(maxTile, estimatedTile));
     }
 
-    public void shapeTestMultiThread(int n, int recursion){
+    public void shapeTestMultiThread(){
         int numThreads = Runtime.getRuntime().availableProcessors();
 
         int tileSize = computeTileSize(image.width, image.height, numThreads);
@@ -96,7 +100,7 @@ public class Screen {
             for (int y = 0; y < image.height; y += tileSize) {
                 int endX = Math.min(x + tileSize, image.width);
                 int endY = Math.min(y + tileSize, image.height);
-                executor.submit(new ColorCalcThread(x, endX, y, endY, n, recursion, this));
+                executor.submit(new ColorCalcThread(x, endX, y, endY, SSAAsamples, recusionDepth, this));
             }
         }
         executor.shutdown();

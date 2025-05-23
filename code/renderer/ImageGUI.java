@@ -40,13 +40,13 @@ public class ImageGUI extends Application {
     }
 
     private void updateImage(Screen screen, ImageView imageView){
-        screen.shapeTestMultiThread(1,1);
+        screen.shapeTestMultiThread();
         screen.image.updateImage();
         imageView.setImage(screen.image.toImageView());
     }
 
     @SuppressWarnings("unused")
-    private void makeSphereTitledPane(Sphere sphere, VBox objects){
+    private void makeSphereTitledPane(Sphere sphere, VBox objects, Screen screen){
         TitledPane tp = new TitledPane();
         tp.setText("Sphere");
         GridPane posGrid = makeTextFieldsForVector(sphere.getCenter());
@@ -90,7 +90,12 @@ public class ImageGUI extends Application {
     
 
         VBox vbox = new VBox();
-        vbox.getChildren().addAll(nameGrid,position,color, makeMaterialPane(sphere));
+        Button removeButton = new Button("Remove Sphere");
+        removeButton.setOnAction((ActionEvent event)->{
+            screen.getShperes().remove(sphere);
+            objects.getChildren().remove(tp);
+        });
+        vbox.getChildren().addAll(nameGrid,position,color, makeMaterialPane(sphere),removeButton);
         tp.setContent(vbox);
         objects.getChildren().add(tp);
     }
@@ -108,6 +113,7 @@ public class ImageGUI extends Application {
             try{
                 float value = Float.parseFloat(xpos.getText());
                 vector.x=value;
+                xpos.setText(value+"");
             }catch(NumberFormatException e){
                 xpos.setText(vector.x+"");
             }
@@ -120,6 +126,7 @@ public class ImageGUI extends Application {
             try{
                 float value = Float.parseFloat(ypos.getText());
                 vector.y=value;
+                ypos.setText(value+"");
             }catch(NumberFormatException e){
                 ypos.setText(vector.y+"");
             }
@@ -131,6 +138,7 @@ public class ImageGUI extends Application {
             try{
                 float value = Float.parseFloat(zpos.getText());
                 vector.z=value;
+                zpos.setText(value+"");
             }catch(NumberFormatException e){
                 zpos.setText(vector.z+"");
             }
@@ -309,7 +317,7 @@ public class ImageGUI extends Application {
     }
 
     @SuppressWarnings("unused")
-    private void makeLightTitledPane(Light light, VBox lights){
+    private void makeLightTitledPane(Light light, VBox lights,Screen screen){
         GridPane position = makeTextFieldsForVector(light.location);
         VBox vBox = new VBox();
         
@@ -334,8 +342,14 @@ public class ImageGUI extends Application {
         });
         nameGrid.add(name, 1,0);
 
+        Button removeButton = new Button("Remove Light");
+        removeButton.setOnAction((ActionEvent event)->{
+            screen.getLights().remove(light);
+            lights.getChildren().remove(tp);
+        });
+
         vBox.getChildren().addAll(nameGrid, position,new Label("Diffuse Intensity:"), makeTextFieldsForColor(light.diffuseIntensity));
-        vBox.getChildren().addAll(new Label("Specular Intenisty:"), makeTextFieldsForColor(light.specularIntensity));
+        vBox.getChildren().addAll(new Label("Specular Intenisty:"), makeTextFieldsForColor(light.specularIntensity),removeButton);
         lights.getChildren().add(tp);
     }
 
@@ -466,14 +480,14 @@ public class ImageGUI extends Application {
         addSphere.setOnAction(( ActionEvent event)->{
             Sphere sphere = new Sphere();
             screen.addSphere(sphere);
-            makeSphereTitledPane(sphere, objects);
+            makeSphereTitledPane(sphere, objects, screen);
         });
 
         Button addLight = new Button("Add Light");
         addLight.setOnAction(( ActionEvent event) -> {
             Light light = new Light();
             screen.addLight(light);
-            makeLightTitledPane(light, lights);
+            makeLightTitledPane(light, lights, screen);
         });
 
         TitledPane ambientLightPane = new TitledPane();
