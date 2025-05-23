@@ -7,9 +7,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
-
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.application.*;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
@@ -269,8 +270,24 @@ public class ImageGUI extends Application {
         lightsTP.setText("Lights");
         VBox lights = new VBox();
         lightsTP.setContent(lights);
+
+        ScrollPane scrollPane = new ScrollPane();
+
+        VBox items = new VBox();
+        items.getChildren().addAll(lightsTP,objectsTP);
+
+        scrollPane.setContent(scrollPane);
+        scrollPane.setContent(items);
+        scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollBarPolicy.NEVER);
+
+
+        rightPanel.setMinWidth(320);
+        lightsTP.setMinWidth(350);
+        objectsTP.setMinWidth(350);
+
         
-        rightPanel.getChildren().addAll(mainControl, lightsTP, objectsTP);
+        rightPanel.getChildren().addAll(mainControl, scrollPane);
 
         main.getChildren().addAll(imageViewPane,rightPanel );
         HBox.setHgrow(imageViewPane, Priority.ALWAYS);
