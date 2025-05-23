@@ -1,11 +1,17 @@
 package code.renderer;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 
 
 
@@ -223,11 +229,11 @@ public class Screen {
         spheres = new ArrayList<>();
         lights = new ArrayList<>();
 
-        String[] mainIn = input.split("\\* ");
+
+        String[] mainIn = input.split("\\*");
         String[] screenSettingsIn = mainIn[0].split("\n");
         String[] lightsIn = mainIn[1].split("\n");
         String[] objectsIn = mainIn[2].split("\n");
-
 
 
         ambientLight = Color.fromString(screenSettingsIn[2].split("~")[1]);
@@ -236,14 +242,15 @@ public class Screen {
 
 
         for (String object : objectsIn) {
-            if (object.equals("Objects:")){
+            if (object.equals(" Objects:")||object.equals("Objects:")){
                 continue;
             }
+            System.out.println(object);
             spheres.add(Sphere.fromString(object));
         }
 
         for (String light : lightsIn) {
-            if (light.equals("Lights:")){
+            if (light.equals("Lights:")||light.equals(" Lights:")){
                 continue;
             }
             lights.add(Light.fromString(light));
@@ -251,32 +258,61 @@ public class Screen {
         
     }
 
+    public void fromTxt(String filename) throws FileNotFoundException{
+        Scanner fileIn = new Scanner(new FileReader(new File(filename)));
+        String result ="";
+        while(fileIn.hasNext()){
+            result+=fileIn.nextLine()+"\n";
+        }
+        fromString(result);
+        fileIn.close();
+    }
+
+    public void toTxt(String filename) throws IOException{
+        Files.writeString(Path.of(filename),this+"");
+    }
+
+    public void toTxt() throws IOException{
+        String templetFilename = "txtOut/SavedConfig";
+        int count = 0;
+        while(true){
+            File file = new File(templetFilename+count+".txt");
+            if (!file.exists()){
+                Files.writeString(Path.of(templetFilename+count+".txt"),this+"");
+                return;
+            }
+            count++;
+        }
+    }
+
 
 
     public static void main(String[] args) throws IOException{
         Screen screen = new Screen();
+        screen.fromTxt("txtOut/SavedConfig0.txt");
 
-        screen.addSphere(new Sphere(1f,new Vector(2f, -.75f, 2f),new Color(.1f, .75f, .1f)));
-        screen.addSphere(new Sphere(1f,new Vector(-.25f, 1.5f, 2.5f),new Color(.8f,.2f,0 )));
+        // screen.addSphere(new Sphere(1f,new Vector(2f, -.75f, 2f),new Color(.1f, .75f, .1f)));
+        // screen.addSphere(new Sphere(1f,new Vector(-.25f, 1.5f, 2.5f),new Color(.8f,.2f,0 )));
         
-        screen.addLight(new Light(
-            new Vector(2, 5, -5),
-            new Color(.8f),
-            new Color(.8f)
-        ));
+        // screen.addLight(new Light(
+        //     new Vector(2, 5, -5),
+        //     new Color(.8f),
+        //     new Color(.8f)
+        // ));
 
-        // screen.sPlusA();
+        // // screen.sPlusA();
 
-        screen.ambientLight = new Color(.05f);
+        // screen.ambientLight = new Color(.05f);
 
-        System.out.println(screen+"\n\n\n");
+        // System.out.println(screen+"\n\n\n");
 
-        Screen newScreen = new Screen();
-        newScreen.fromString(screen+"");
+        // Screen newScreen = new Screen();
+        // newScreen.fromString(screen+"");
 
         screen.shapeTestMultiThread();
         
         screen.saveImage();
+        // screen.toTxt();
         
         // long startTime = System.currentTimeMillis();
         // // screen.shapeTestMultiThread(6,1);
