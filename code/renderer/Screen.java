@@ -217,6 +217,10 @@ public class Screen {
         return result;
     }
 
+    public void fromString(String input){
+        //TODO use static functions from each sphere and light
+    }
+
 
 
     public static void main(String[] args) throws IOException{

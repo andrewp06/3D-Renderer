@@ -30,5 +30,22 @@ public class Color {
         this.b = b;
     }
 
-    
+    public static Color fromString(String input){
+        String[] colorStrings = input.split("\\(");
+        colorStrings = colorStrings[1].split("\\)");
+        colorStrings = colorStrings[0].split(", ");
+
+        float r = Float.parseFloat(colorStrings[0].split("=")[1]);
+        float g = Float.parseFloat(colorStrings[1].split("=")[1]);
+        float b = Float.parseFloat(colorStrings[2].split("=")[1]);
+
+        return new Color(r,g,b);
+
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new Color(1,.5f,.2f));
+        System.out.println(fromString(new Color(1,.5f,.2f)+""));
+
+    }
 }

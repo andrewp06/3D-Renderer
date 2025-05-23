@@ -15,6 +15,11 @@ public class Light {
         this(new Vector(0, 1, -1), new Color(.8f), new Color(.8f));
     }
 
+    public static Light fromString(String string){
+        //TODO 
+        return new Light();
+    }
+
     @Override
     public String toString() {
         return "Light - |location = "+ location+", Diffuse Intensity = "+diffuseIntensity+", Specular Intensity = "+ specularIntensity+"|";

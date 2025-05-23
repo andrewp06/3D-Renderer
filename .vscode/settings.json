@@ -10,5 +10,6 @@
         "exclude": [
             "/Users/andrewrohde/.m2/repository/org/openjfx/javafx-media/22/javafx-media-22-mac-aarch64.jar"
         ]
-    }
+    },
+    "java.debug.settings.onBuildFailureProceed": true
 }
