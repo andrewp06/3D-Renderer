@@ -12,10 +12,14 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Optional;
 
 import javafx.application.*;
 import javafx.scene.Node;
@@ -461,11 +465,61 @@ public class ImageGUI extends Application {
 
         MenuItem newItem = new MenuItem("New");
         newItem.setOnAction((ActionEvent event)->{
-            //TODO
+            screen.SSAAsamples = 1;
+            screen.recursionDepth = 1;
+            screen.ambientLight = new Color(.05f);
+
+            screen.spheres = new ArrayList<>();
+            screen.lights = new ArrayList<>();
+            
+            for(Object object : objects.getChildren().toArray()){
+                Node node = (Node)object;
+                objects.getChildren().remove(node);
+            }
+            for(Object object : lights.getChildren().toArray()){
+                Node node = (Node)object;
+
+                lights.getChildren().remove(node);
+            }
         });
         MenuItem openItem = new MenuItem("Open");
         openItem.setOnAction((ActionEvent event)->{
-            //TODO make some sort of pop up
+            
+            
+            while(true){
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setTitle("Import File");
+                dialog.setHeaderText("Import File");
+                dialog.setContentText("Please enter the filename:");
+
+                Optional<String> result = dialog.showAndWait();
+                String filename = result.get().trim();
+                try {
+                    screen.fromTxt(filename);
+                    break;
+                } catch (FileNotFoundException e) {
+                    
+                }
+            }
+
+            for(Object object : objects.getChildren().toArray()){
+                Node node = (Node)object;
+                objects.getChildren().remove(node);
+            }
+            for(Object object : lights.getChildren().toArray()){
+                Node node = (Node)object;
+
+                lights.getChildren().remove(node);
+            }
+
+            for (Sphere sphere : screen.spheres) {
+                makeSphereTitledPane(sphere, objects, screen);
+            }            
+            for(Light light: screen.lights){
+                makeLightTitledPane(light, lights, screen);
+            }
+
+
         });
         MenuItem saveConfig = new MenuItem("Save Config");
         saveConfig.setOnAction((ActionEvent event)->{
