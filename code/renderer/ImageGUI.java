@@ -297,7 +297,6 @@ public class ImageGUI extends Application {
         shiny.setOnAction((ActionEvent event )->{
             try{
                 float value = Float.parseFloat(shiny.getText());
-                value = Math.min(1, value);
                 value = Math.max(0,value);
                 sphere.material.shininess = value;
                 shiny.setText(value+"");
@@ -477,9 +476,10 @@ public class ImageGUI extends Application {
                 objects.getChildren().remove(node);
             }
             for(Object object : lights.getChildren().toArray()){
-                Node node = (Node)object;
-
-                lights.getChildren().remove(node);
+                TitledPane tp = (TitledPane)object;
+                if(!tp.getText().equals("Ambient Light")){
+                    lights.getChildren().remove(tp);
+                }
             }
         });
         MenuItem openItem = new MenuItem("Open");
@@ -500,6 +500,10 @@ public class ImageGUI extends Application {
                 } catch (FileNotFoundException e) {
                     
                 }
+                try{
+                    screen.fromTxt("txtOut/"+filename);
+                    break;
+                } catch (FileNotFoundException e){}
             }
 
             for(Object object : objects.getChildren().toArray()){
@@ -507,9 +511,10 @@ public class ImageGUI extends Application {
                 objects.getChildren().remove(node);
             }
             for(Object object : lights.getChildren().toArray()){
-                Node node = (Node)object;
-
-                lights.getChildren().remove(node);
+                TitledPane tp = (TitledPane)object;
+                if(!tp.getText().equals("Ambient Light")){
+                    lights.getChildren().remove(tp);
+                }
             }
 
             for (Sphere sphere : screen.spheres) {
@@ -523,9 +528,21 @@ public class ImageGUI extends Application {
         });
         MenuItem saveConfig = new MenuItem("Save Config");
         saveConfig.setOnAction((ActionEvent event)->{
-            try {
-                screen.toTxt();
-            } catch (IOException e) {}
+            while(true){
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setTitle("Save File");
+                dialog.setHeaderText("Save File");
+                dialog.setContentText("Please enter the filename:");
+
+                Optional<String> result = dialog.showAndWait();
+                String filename = result.get().trim();
+                try {
+                    screen.toTxt(filename);
+                    break;
+                } catch (IOException e) {
+                    
+                }
+            }
         });
         MenuItem saveImage = new MenuItem("Save Image");
         saveImage.setOnAction((ActionEvent event)->{
