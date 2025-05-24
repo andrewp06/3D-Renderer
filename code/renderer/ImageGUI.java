@@ -11,6 +11,8 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TitledPane;
@@ -551,9 +553,20 @@ public class ImageGUI extends Application {
             } catch (IOException e) {}
         });
 
+        MenuItem quitItem = new MenuItem("Quit");
+        quitItem.setOnAction((ActionEvent event)->{
+            try {
+                Platform.exit();
+                System.out.println("stoppped");
+            } catch (Exception e) {
+                
+                e.printStackTrace();
+            }
+        });
+
         topRibbon.getMenus().addAll(file);
 
-        file.getItems().addAll(newItem,openItem,saveConfig,saveImage);
+        file.getItems().addAll(newItem,openItem,saveConfig,saveImage,new SeparatorMenuItem(),quitItem);
 
 
 
