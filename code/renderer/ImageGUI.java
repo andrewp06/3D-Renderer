@@ -11,7 +11,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
@@ -483,6 +482,8 @@ public class ImageGUI extends Application {
                     lights.getChildren().remove(tp);
                 }
             }
+
+            updateImage(screen, imageView);
         });
         MenuItem openItem = new MenuItem("Open");
         openItem.setOnAction((ActionEvent event)->{
@@ -548,9 +549,21 @@ public class ImageGUI extends Application {
         });
         MenuItem saveImage = new MenuItem("Save Image");
         saveImage.setOnAction((ActionEvent event)->{
-            try {
-                screen.saveImage();
-            } catch (IOException e) {}
+            while(true){
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setTitle("Save Image");
+                dialog.setHeaderText("Save Image");
+                dialog.setContentText("Please enter the filename:");
+
+                Optional<String> result = dialog.showAndWait();
+                String filename = result.get().trim();
+                try {
+                    screen.saveImage(filename);
+                    break;
+                } catch (IOException e) {
+                    
+                }
+            }
         });
 
         MenuItem quitItem = new MenuItem("Quit");

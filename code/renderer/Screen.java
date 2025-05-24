@@ -208,6 +208,11 @@ public class Screen {
         }
     }
 
+    public void saveImage(String filename) throws IOException{
+        File file = new File("photos/"+filename+".png");
+        image.save(file);
+    }
+
     @Override
     public String toString() {
         String result = "\nScreen: \n"+" Ambient Light~"+ ambientLight+"\n SSAA Sample Size~"+SSAAsamples+"\n Reflection Recursion Depth~"+recursionDepth+"\n* Lights:\n";
