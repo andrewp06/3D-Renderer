@@ -59,7 +59,7 @@ public class ImageGUI extends Application {
     @SuppressWarnings("unused")
     private void makeSphereTitledPane(Sphere sphere, VBox objects, Screen screen){
         TitledPane tp = new TitledPane();
-        tp.setText("Sphere");
+        tp.setText(sphere.name);
         GridPane posGrid = makeTextFieldsForVector(sphere.getCenter());
         GridPane nameGrid = new GridPane();
         nameGrid.setVgap(4);
@@ -536,6 +536,10 @@ public class ImageGUI extends Application {
             for(Light light: screen.lights){
                 makeLightTitledPane(light, lights, screen);
             }
+
+            SSAAsamplesFeild.setText(screen.SSAAsamples+"");
+            recursionDepthField.setText(screen.recursionDepth+"");
+
 
 
         });
