@@ -1,0 +1,14 @@
+
+Screen: 
+ Ambient Light~Color(r=0.8, g=0.3, b=0.3)
+ SSAA Sample Size~2
+ Reflection Recursion Depth~2
+* Lights:
+Light - |location:<4.0, 30.0, -10.0>. Diffuse Intensity:Color(r=0.9, g=0.4, b=0.9). Specular Intensity:Color(r=0.8, g=0.6, b=0.8)|
+Light - |location:<-8.0, -10.0, -7.0>. Diffuse Intensity:Color(r=0.4, g=0.9, b=0.2). Specular Intensity:Color(r=0.2, g=0.8, b=0.6)|
+* Objects:
+Sphere - |R:1.0. Center:<2.0, 1.0, 6.0>. Color:Color(r=0.9, g=0.2, b=0.2). Material:{Ambient Constant~Color(r=0.4, g=0.9, b=0.7)/ Reflectivity~Color(r=0.4, g=0.4, b=0.4)/ Diffuse Constant~0.4/ Specular Constant~0.3/ Shininess~6.0}|
+Sphere - |R:1.0. Center:<-0.6, -0.5, 2.0>. Color:Color(r=1.0, g=0.0, b=0.0). Material:{Ambient Constant~Color(r=0.1, g=0.1, b=0.8)/ Reflectivity~Color(r=0.8, g=0.2, b=0.8)/ Diffuse Constant~0.4/ Specular Constant~0.5/ Shininess~2.0}|
+Sphere - |R:1.0. Center:<1.6, -1.0, 5.0>. Color:Color(r=1.0, g=0.0, b=0.0). Material:{Ambient Constant~Color(r=0.1, g=0.1, b=0.1)/ Reflectivity~Color(r=0.4, g=0.4, b=0.4)/ Diffuse Constant~0.4/ Specular Constant~0.2/ Shininess~20.0}|
+Sphere - |R:1.0. Center:<-3.0, 2.0, 7.0>. Color:Color(r=1.0, g=0.3, b=0.3). Material:{Ambient Constant~Color(r=0.1, g=0.5, b=0.1)/ Reflectivity~Color(r=0.4, g=0.4, b=0.4)/ Diffuse Constant~0.4/ Specular Constant~0.2/ Shininess~20.0}|
+Sphere - |R:1.0. Center:<1.0, -2.0, -1.0>. Color:Color(r=0.4, g=0.5, b=0.2). Material:{Ambient Constant~Color(r=0.1, g=0.1, b=0.1)/ Reflectivity~Color(r=0.4, g=0.4, b=0.4)/ Diffuse Constant~0.4/ Specular Constant~0.2/ Shininess~20.0}|

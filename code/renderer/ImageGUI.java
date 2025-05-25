@@ -84,10 +84,19 @@ public class ImageGUI extends Application {
         radius.setOnAction((ActionEvent event)->{
             try{
                 sphere.radius = Float.parseFloat(radius.getText());
+                System.out.println(sphere.radius);
             }catch(NumberFormatException e){
                 radius.setText(sphere.radius+"");
             }
         }); 
+        radius.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (!isNowFocused) {
+        
+                if (radius.getOnAction() != null) {
+                    radius.getOnAction().handle(new ActionEvent());
+                }
+            }
+        });
         posGrid.add(radius, 1, 3);
 
         TitledPane position = new TitledPane();
