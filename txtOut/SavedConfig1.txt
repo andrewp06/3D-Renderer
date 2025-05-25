@@ -1,7 +1,0 @@
-
-Screen: 
- Ambient Light~Color(r=0.05, g=0.05, b=0.05)
- SSAA Sample Size~1
- Reflection Recursion Depth~1
-* Lights:
-* Objects:

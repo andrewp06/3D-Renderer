@@ -65,9 +65,10 @@ public class ImageGUI extends Application {
         nameGrid.setVgap(4);
         nameGrid.setPadding(new Insets(5, 5, 5, 5));
         nameGrid.add(new Label("Name: "), 0, 0);
-        TextField name = new TextField("Sphere");
+        TextField name = new TextField(sphere.name);
         name.setOnAction((ActionEvent event)->{
             tp.setText(name.getText());
+            sphere.name = name.getText();
         }); 
         name.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
             if (!isNowFocused) {
