@@ -12,12 +12,11 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <javafx.version>21.0.1</javafx.version> <!-- change if needed -->
+        <javafx.version>21.0.1</javafx.version>
     </properties>
 
     <dependencies>
-        <!-- JavaFX dependencies -->
-        <dependency>
+       <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
@@ -27,31 +26,29 @@
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
 
-        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.32</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- Swing -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-swing</artifactId>
-            <version>${javafx.version}</version>
-        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Maven Compiler Plugin -->
+            <!-- Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.10.1</version>
                 <configuration>
+                    <release>17</release> <!-- use release tag for Java 17 -->
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
@@ -62,7 +59,7 @@
                 </configuration>
             </plugin>
 
-            <!-- JavaFX Maven Plugin for running the app -->
+            <!-- JavaFX Plugin --> 
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
@@ -70,7 +67,30 @@
                 <configuration>
                     <mainClass>com.example.renderer.ImageGUI</mainClass>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>run</id>
+                        <goals><goal>run</goal></goals>
+                    </execution>
+                    <execution>
+                        <id>jlink</id>
+                        <goals><goal>jlink</goal></goals>
+                        <configuration>
+                            <jpackage>
+                                <appVersion>1.0.0</appVersion>
+                                <vendor>Andrew Rohde</vendor>
+                                <runtimeImage>${project.build.directory}/runtimeImage</runtimeImage>
+                                <mac>
+                                    <bundleName>MyRendererApp</bundleName>
+                                    <icon>src/main/photos/app.icns</icon>
+                                </mac>
+                            </jpackage>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
+
         </plugins>
+
     </build>
 </project>

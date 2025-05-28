@@ -209,7 +209,7 @@ public class Screen {
     }
 
     public void saveImage(String filename) throws IOException{
-        File file = new File("photos/"+filename+".png");
+        File file = new File("src/main/photos/"+filename+".png");
         image.save(file);
     }
 
@@ -274,11 +274,11 @@ public class Screen {
     }
 
     public void toTxt(String filename) throws IOException{
-        Files.writeString(Path.of("txtOut/"+filename),this+"");
+        Files.writeString(Path.of("src/main/txtOut/"+filename),this+"");
     }
 
     public void toTxt() throws IOException{
-        String templetFilename = "txtOut/SavedConfig";
+        String templetFilename = "src/main/txtOut/SavedConfig";
         int count = 0;
         while(true){
             File file = new File(templetFilename+count+".txt");

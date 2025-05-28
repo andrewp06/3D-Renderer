@@ -514,7 +514,7 @@ public class ImageGUI extends Application {
                     
                 }
                 try{
-                    screen.fromTxt("txtOut/"+filename);
+                    screen.fromTxt("src/main/txtOut/"+filename);
                     break;
                 } catch (FileNotFoundException e){}
             }
