@@ -1,77 +1,12 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "java",
-            "name": "Sphere",
-            "request": "launch",
-            "mainClass": "code.renderer.Sphere",
-            "projectName": "3D-Renderer_54a4637f"
-        },
-        {
-            "type": "java",
-            "name": "Material",
-            "request": "launch",
-            "mainClass": "code.renderer.Material",
-            "projectName": "3D-Renderer_54a4637f"
-        },
-        {
-            "type": "java",
-            "name": "Light",
-            "request": "launch",
-            "mainClass": "code.renderer.Light",
-            "projectName": "3D-Renderer_54a4637f"
-        },
-        {
-            "type": "java",
-            "name": "Vector",
-            "request": "launch",
-            "mainClass": "code.renderer.Vector",
-            "projectName": "3D-Renderer_54a4637f"
-        },
-        {
-            "type": "java",
-            "name": "Color",
-            "request": "launch",
-            "mainClass": "code.renderer.Color",
-            "projectName": "3D-Renderer_54a4637f"
-        },
-        {
-            "type": "java",
-            "name": "Current File",
-            "request": "launch",
-            "mainClass": "${file}"
-        },
-        {
-            "type": "java",
-            "name": "HelloWorld",
-            "request": "launch",
-            "mainClass": "code.HelloWorld",
-            "projectName": "3D-Renderer_54a4637f"
-        },
-        {
-            "type": "java",
-            "name": "ImageGUI",
-            "request": "launch",
-            "mainClass": "code.renderer.ImageGUI",
-            "projectName": "3D-Renderer_54a4637f"
-        },
-        {
-            "type": "java",
-            "name": "Screen",
-            "request": "launch",
-            "mainClass": "code.renderer.Screen",
-            "projectName": "3D-Renderer_54a4637f"
-        },
-        {
-            "type": "java",
-            "request": "launch",
-            "name": "Run JavaFX App",
-            "mainClass": "code.renderer.ImageGUI",
-            "vmArgs": "--module-path \"/Users/andrewrohde/javafx-sdk-24/lib\" --add-modules javafx.controls,javafx.swing"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run JavaFX (via Maven task)",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "com.example.renderer.Screen",
+      "preLaunchTask": "Run JavaFX via Maven"
+    }
+  ]
 }
