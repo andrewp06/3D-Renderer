@@ -2,6 +2,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "ImageGUI",
+      "request": "launch",
+      "mainClass": "com.example.renderer.ImageGUI",
+      "projectName": "javafx-lombok-app"
+    },
+    {
       "name": "Run JavaFX (via Maven task)",
       "type": "java",
       "request": "launch",
