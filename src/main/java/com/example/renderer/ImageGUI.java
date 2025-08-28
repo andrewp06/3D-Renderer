@@ -607,7 +607,6 @@ public class ImageGUI extends Application {
         rerender.setOnAction(( ActionEvent event)->{
             rerender.setDisable(true);
             new Thread(()->{
-                screen.shapeTest(1,0);
                
                 Platform.runLater(()->{
                     updateImage(screen, imageView);
