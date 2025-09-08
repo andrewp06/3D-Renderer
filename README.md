@@ -7,4 +7,4 @@ I used it as a rough guide for my project. I followed all of the math parts of t
 
 
 Here are my 2 favorite images I have rendered:
-![plot](./photos/RenderedImage0.png)  ![plot](./photos/RenderedImage20.png)
+![plot](./src/main/photos/favorite.png)  ![plot](./src/main/photos/ThwbALLS.png)
