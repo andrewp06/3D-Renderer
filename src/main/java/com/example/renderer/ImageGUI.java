@@ -1,7 +1,5 @@
 package com.example.renderer;
 
-
-
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
