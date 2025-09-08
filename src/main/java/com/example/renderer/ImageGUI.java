@@ -274,6 +274,14 @@ public class ImageGUI extends Application {
             }
         });
 
+        diffConst.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if(!isNowFocused){
+                if(diffConst.getOnAction() != null){
+                    diffConst.getOnAction().handle(new ActionEvent());
+                }
+            }
+        });
+
         grid.add(diffConst,1,0);
 
 
@@ -286,6 +294,7 @@ public class ImageGUI extends Application {
                 value = Math.max(0,value);
                 sphere.material.specularConstant = value;
                 specConst.setText(value+"");
+
             }catch(NumberFormatException e){
                 specConst.setText(sphere.material.specularConstant+"");
             }
